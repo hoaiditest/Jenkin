@@ -16,12 +16,10 @@ test("test", async ({}) => {
   await page.goto("https://mta.engibase.com/haproxy?stats");
   await page.waitForTimeout(3000);
   await sendmail();
-  console.log("Không có hiện thị");
   await page.waitForTimeout(3000);
   /*await page.goto('https://ha.v2.engibase.com/haproxy?stats');
   await page.waitForTimeout(3000);
   await sendmail();
-  console.log('Không có hiện thị'); 
   await page.waitForTimeout(3000);*/
 
   async function sendmail() {
