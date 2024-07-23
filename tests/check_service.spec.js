@@ -40,8 +40,8 @@ test("test", async ({}) => {
         secure: true,
         auth: {
           // TODO: replace `user` and `pass` values from <https://forwardemail.net>
-          user: "nesv025@gmail.com",
-          pass: "kjgcuqzqdziibvfx ",
+          user: "dimot111111@gmail.com",
+          pass: "usahmoepwxiaysop",
         },
       });
       const info = await transporter.sendMail({
