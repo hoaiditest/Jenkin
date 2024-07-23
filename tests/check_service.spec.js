@@ -26,7 +26,7 @@ test("test", async ({}) => {
     const url = await page.url();
     console.log("url:", url);
     const element = await page.$$(
-      '//tr[@class="active_up"]//a[@class="lfsb"]'
+      '//tr[@class="active_down"]//a[@class="lfsb"]'
     );
     const active = element.length;
     console.log("Số lượng có trên trang web:", active);
