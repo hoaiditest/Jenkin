@@ -30,10 +30,10 @@ test("Jpsic ", async ({ page }) => {
   await page.goto("https://test.jpsic.co.jp/");
   await page.waitForTimeout(5000);
   const response = await page.request.get(page.url());
-  if (response.status() == 200) {
+  if (response.status() != 200) {
     await sentmail(
-      "Jpsic Env : Test Status khác 200",
-      "https://test.jpsic.co.jp/ Status khác 200"
+      "Jpsic Env_Test Status khác 200",
+      "https://test.jpsic.co.jp/ \n Jpsic Env_Test Status khác 200"
     );
   }
 });
