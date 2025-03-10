@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 async function check_class(page) {
   await page.waitForTimeout(3000);
-  const element = await page.$$(".active_up .lfsb");
+  const element = await page.$$(".active_down .lfsb");
   const vps = [];
   for (const d of element) {
     const text = await d.textContent();
@@ -66,7 +66,7 @@ async function click_menu(page) {
 async function check_status(page, url) {
   await page.waitForTimeout(1000);
   const response = await page.request.get(page.url({ timeout: 210000 }));
-  if (response.status() == 200) {
+  if (response.status() != 200) {
     console.log(response.status() + url);
     await sentmail_errorJP(url, `Status Code: ${response.status()}`);
     for (;;) {
@@ -78,7 +78,7 @@ async function check_status(page, url) {
         await sentmail_errorJP(url, `Status Code: ${response2.status()}`);
         // await page.goBack();
         console.log("Check status again");
-        // await page.waitForTimeout(600000);
+        await page.waitForTimeout(600000);
       } else {
         break;
       }
@@ -87,9 +87,9 @@ async function check_status(page, url) {
 }
 async function check_noty_error(page, url) {
   await page.waitForTimeout(1000);
-  // Test
+  /*Test
   await page.goto("https://visitor.engibase.com/personnel-group");
-  await page.locator(".btn-action-breadcrumb").nth(2).click();
+  await page.locator(".btn-action-breadcrumb").nth(2).click();*/
   const noty = await page.locator(".noty_body").nth(0);
   const check_noty = await noty.isVisible();
   if (check_noty) {
@@ -104,7 +104,7 @@ async function check_noty_error(page, url) {
         await console.log("noty_error " + url + "  " + text);
         await sentmail_errorJP(url, `Alert Error : ${text} `);
         console.log("Check Notification again");
-        // await page.waitForTimeout(600000);
+        await page.waitForTimeout(600000);
       } else {
         break;
       }
