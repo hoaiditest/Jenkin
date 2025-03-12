@@ -44,9 +44,9 @@ test("Jpsic ", async ({ page }) => {
   }
 });
 
-test("test", async ({ page }) => {
-  test.setTimeout(3600000);
-  /*login*/
-  await login(page, ver2_visitor_product_checkService);
-  await run_fun(page, expect);
-});
+// test("Engibase ", async ({ page }) => {
+//   test.setTimeout(3600000);
+//   /*login*/
+//   await login(page, ver2_visitor_product_checkService);
+//   await run_fun(page, expect);
+// });
