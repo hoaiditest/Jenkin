@@ -27,11 +27,34 @@ const ver2_visitor_product_checkService = {
 };
 async function run_fun(page, expect) {
   try {
-    await click_menu(page, expect);
+    await open_browser("didimimi1999dimi");
   } catch (error) {
     console.log(error);
     await sentmail_error(error, error);
   }
+}
+const { chromium, firefox, webkit } = require("playwright");
+async function open_browser(mail) {
+  const browser = await chromium.launch({
+    headless: false,
+    args: ["--disable-blink-features=AutomationControlled"],
+  });
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  await page.goto("https://mail.google.com/mail/u/0/#inbox");
+  await page
+    .locator("//input[@type='email']")
+    .fill(`${mail}@gmail.com`, { timeout: 15000 });
+  await page.keyboard.press("Enter");
+  await page
+    .locator("//input[@type='password']")
+    .fill("Duywasd123", { timeout: 30000 });
+  await page.keyboard.press("Enter");
+  await page.waitForTimeout(10000);
+  await page.goto("https://mail.google.com/mail/u/0/#inbox");
+  await page.waitForTimeout(3000);
+  console.log("done");
+  return page;
 }
 async function click_menu(page) {
   // await login_all(
