@@ -36,7 +36,7 @@ async function run_fun(page, expect) {
 const { chromium, firefox, webkit } = require("playwright");
 async function open_browser(mail) {
   const browser = await chromium.launch({
-    headless: true,
+    headless: false,
     args: ["--disable-blink-features=AutomationControlled"],
   });
   const context = await browser.newContext();
