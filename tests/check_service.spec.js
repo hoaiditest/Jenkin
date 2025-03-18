@@ -4,7 +4,7 @@ import {
   login,
   run_fun,
   sentmail_error,
-  ver2_visitor_product_checkService,
+  ver2_visitor_product_025,
 } from "./z_function";
 const { chromium } = require("playwright");
 
@@ -47,6 +47,6 @@ test("Jpsic ", async ({ page }) => {
 test("Engibase ", async ({ page }) => {
   test.setTimeout(3600000);
   /*login*/
-  // await login(page, ver2_visitor_product_checkService);
+  await login(page, ver2_visitor_product_025);
   await run_fun(page, expect);
 });
