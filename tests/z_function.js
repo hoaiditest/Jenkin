@@ -3375,7 +3375,7 @@ async function payment_history(page) {
 }
 async function check_class(page) {
   await page.waitForTimeout(3000);
-  const element = await page.$$(".active_down .lfsb");
+  const element = await page.$$(".active_up .lfsb");
   const vps = [];
   for (const d of element) {
     const text = await d.textContent();
