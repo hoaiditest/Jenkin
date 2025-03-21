@@ -33,14 +33,29 @@ test("Check vps", async ({}) => {
   }
 });
 test("Jpsic ", async ({ page }) => {
-  await page.goto("https://test.jpsic.co.jp/");
-  await page.waitForTimeout(5000);
-  const response = await page.request.get(page.url());
-  if (response.status() != 200) {
-    await sentmail_error(
-      "Jpsic Env_Test Status khác 200",
-      "https://test.jpsic.co.jp/ \n Jpsic Env_Test Status khác 200"
-    );
+  test.setTimeout(300000);
+  const link = [
+    "https://test.jpsic.co.jp/",
+    "https://jpsic.co.jp/",
+    "https://test.jsic-userpage.jpsic.co.jp/",
+    "https://test.jsic-master2page.jpsic.co.jp/",
+    "https://jsic-master2page.jpsic.co.jp/",
+    "https://jsic-userpage.jpsic.co.jp/",
+    "https://master2page.jpsic.g-root.com/",
+    "https://userpage.jpsic.g-root.com/",
+    "https://jpsic.g-root.com/register-real-store",
+    "https://jpsic.g-root.com/register-online-store",
+  ];
+  for (let i = 0; i < link.length; i++) {
+    await page.goto(link[i]);
+    await page.waitForTimeout(5000);
+    const response = await page.request.get(page.url());
+    if (response.status() != 200) {
+      await sentmail_error(
+        "Jpsic Env_Test Status khác 200",
+        `${link[i]} \n Jpsic Env_Test Status khác 200`
+      );
+    }
   }
 });
 
