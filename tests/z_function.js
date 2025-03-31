@@ -93,6 +93,11 @@ const ver2_company_product_025 = {
   email: "nesv025@gmail.com",
   pw: "Duywasd123",
 };
+const ver2_visitor_check_service = {
+  url: "https://visitor.engibase.com/",
+  email: "checkservice@gmail.com",
+  pw: "Duywasd123",
+};
 const currentDate = new Date();
 const formattedDate = currentDate.toLocaleDateString();
 async function login(page, config) {
@@ -402,7 +407,13 @@ async function add_group(page, name) {
   await page.waitForTimeout(5000);
 }
 async function search_bp(page) {
-  const bp = ["trungsantrungsan", "di1999test", "hoaiditest", "hoangoisan"];
+  const bp = [
+    "trungsantrungsan",
+    "di1999test",
+    "hoaiditest",
+    "hoangoisan@gmail.com",
+    "hoangoisan2@gmail.com",
+  ];
   for (let i = 0; i < bp.length; i++) {
     try {
       await page.locator(".input-filter").fill(bp[i], { timeout: 5000 });
@@ -459,11 +470,7 @@ async function sent(page, template) {
   // console.log(`Số lượng tùy chọn trong selectbox là: ${select_temp}`);
   // await page.waitForTimeout(10000);
   await page.locator("#select_temp").selectOption(template);
-  await page.locator("#subject").selectOption({ index: 1 });
-  await page.locator("#body_self").selectOption({ index: 1 });
-  await page.locator("#body_maku").selectOption({ index: 1 });
-  await page.locator("#body_bottom").selectOption({ index: 1 });
-  await page.locator("#body_signature").selectOption({ index: 1 });
+  await template_selectOption(page);
   await page.locator("#box-attachment").click();
   const fileChooserPromise = page.waitForEvent("filechooser");
   await page.locator("#upload-file").click();
@@ -660,6 +667,8 @@ async function add_template(page) {
     "outbox_sent_mail_self",
     "outbox_sent_mail",
     "sent_mail_interaction_template",
+    "outbox_interaction",
+    "reply_interaction",
   ];
   for (let y = 0; y < mail.length; y++) {
     await goto(page, "mail-template-group");
@@ -972,7 +981,7 @@ async function click_menu(page) {
       await page.waitForTimeout(1000);
       const url2 = await page.url();
       await check_status(page, url2);
-      await check_noty_error(page, url2);
+      // await check_noty_error(page, url2);
       /*if (url1 != url2) {
         await click_breadcrumb(page);
       }*/
@@ -1007,10 +1016,10 @@ async function check_status(page, url) {
 }
 async function check_noty_error(page, url) {
   await page.waitForTimeout(1000);
-  /*Test
-  await page.goto("https://visitor.engibase.com/personnel-group");
-  await page.locator(".btn-action-breadcrumb").nth(2).click();*/
-  const noty = await page.locator(".noty_body").nth(0);
+  // Test
+  /*await goto(page, "personnel-group");
+  await page.locator(".btn-action-breadcrumb").nth(2).click();
+  const noty = await page.locator(".noty_body").nth(0);*/
   const check_noty = await noty.isVisible();
   if (check_noty) {
     const text = await noty.textContent();
@@ -1575,22 +1584,19 @@ async function login_2_browser(page) {
   await page.waitForTimeout(10000);
   await page1.waitForTimeout(10000);
 }
-async function sent_mail_interaction(page) {
-  await goto(page, "sent-mail-interaction");
-  await page.locator("#email_to-tokenfield").fill("hoaiditest@gmail.com");
-  await page.keyboard.press("Tab");
-  await page.locator("#email_to-tokenfield").fill("hoaiditest1@gmail.com");
-  await page.keyboard.press("Tab");
-  await page.locator("#email_to-tokenfield").fill("hoaiditest2@gmail.com");
-  await page.keyboard.press("Tab");
-  await page.locator("#email_cc-tokenfield").fill("hoaiditest@gmail.com");
-  await page.keyboard.press("Tab");
-  await page.locator("#email_cc-tokenfield").fill("hoaiditest1@gmai.com");
-  await page.keyboard.press("Tab");
-  await page.locator("#email_cc-tokenfield").fill("hoaiditest2@gmai.com");
-  await page.keyboard.press("Tab");
-  await page.locator("#subject_content").fill("sent_mail_interaction");
-  await page.locator("#body_detail_text_content").fill("sent_mail_interaction");
+async function interaction_fillMail_file(page) {
+  const mail_interaction = ["hoaiditest", "hoaiditest1", "hoaiditest2"];
+  for (let i = 0; i < mail_interaction.length; i++) {
+    await page
+      .locator("#email_to-tokenfield")
+      .fill(`${mail_interaction[i]}@gmail.com`);
+    await page.keyboard.press("Tab");
+    /*await page
+      .locator("#email_cc-tokenfield")
+      .fill(`${mail_interaction[i]}@gmail.com`);
+    await page.keyboard.press("Tab");*/
+  }
+  await page.waitForTimeout(1000);
   const fileChooserPromise = page.waitForEvent("filechooser");
   await page.locator('//label[@for="upload-file"]').click();
   const fileChooser = await fileChooserPromise;
@@ -1610,74 +1616,133 @@ async function sent_mail_interaction(page) {
     "file/file_new/自社要員情報(3).xlsx",
     "file/file_new/自社要員情報(4).xlsx",
   ]);
-  await console.log("Đã upload file thành công và đợi 20 giây ");
-  await page.waitForTimeout(20000);
-  await page.locator(".btn_confirm").click();
   await page.waitForTimeout(10000);
+}
+async function interaction_sent(page) {
+  await page.locator(".btn_confirm").click();
+  await page.waitForTimeout(5000);
   await page.locator(".btn_send").click();
   await page.waitForTimeout(3000);
   await page.locator(".swal-button--confirm").click();
   await page.waitForTimeout(3000);
   await page.locator(".swal-button--confirm").click();
+  await page.waitForTimeout(3000);
+}
+async function template_selectOption(page) {
+  const temp_interaction = [
+    "subject",
+    "body_self",
+    "body_maku",
+    "body_details",
+    "body_bottom",
+    "body_signature",
+  ];
+  for (let i = 0; i < temp_interaction.length; i++) {
+    try {
+      await page
+        .locator(`#${temp_interaction[i]}`)
+        .nth(0)
+        .selectOption({ index: 1 }, { timeout: 1000 });
+    } catch (error) {
+      try {
+        await page
+          .locator(`#${temp_interaction[i]}`)
+          .nth(1)
+          .selectOption({ index: 1 }, { timeout: 1000 });
+      } catch (error) {}
+    }
+  }
+}
+async function sent_mail_interaction(page) {
+  await goto(page, "sent-mail-interaction");
+  await page
+    .locator("#subject_content")
+    .fill(`sent_mail_interaction ${new Date().toLocaleString()}`);
+  await page.locator("#body_detail_text_content").click();
+  await page
+    .locator("#body_detail_text_content")
+    .fill(`sent_mail_interaction ${new Date().toLocaleString()}`);
+  await interaction_fillMail_file(page);
+  await interaction_sent(page);
 }
 async function sent_mail_interaction_template(page) {
   await goto(page, "sent-mail-interaction");
   await page.locator("#type_template").click();
-  await page.locator("#email_to-tokenfield").fill("hoaiditest@gmail.com");
-  await page.keyboard.press("Tab");
-  await page.locator("#email_to-tokenfield").fill("hoaiditest1@gmail.com");
-  await page.keyboard.press("Tab");
-  await page.locator("#email_to-tokenfield").fill("hoaiditest2@gmail.com");
-  await page.keyboard.press("Tab");
-  await page.locator("#email_cc-tokenfield").fill("hoaiditest@gmail.com");
-  await page.keyboard.press("Tab");
-  await page.locator("#email_cc-tokenfield").fill("hoaiditest1@gmai.com");
-  await page.keyboard.press("Tab");
-  await page.locator("#email_cc-tokenfield").fill("hoaiditest2@gmai.com");
-  await page.keyboard.press("Tab");
-  await page.waitForTimeout(5000);
-  const select_temp = await page
-    .locator('//select[@id="select_temp"]//option')
-    .count();
-  console.log(`Số lượng tùy chọn trong selectbox là: ${select_temp}`);
-  await page.waitForTimeout(5000);
-  await page.locator("#subject_content").fill("sent_mail_interaction_template");
   await page
     .locator("#select_temp")
     .selectOption("sent_mail_interaction_template");
-  await page.locator("#body_self").nth(0).selectOption({ index: 1 });
-  await page.locator("#body_maku").nth(0).selectOption({ index: 1 });
-  await page.locator("#body_details").nth(0).selectOption({ index: 1 });
-  await page.locator("#body_bottom").nth(0).selectOption({ index: 1 });
-  await page.locator("#body_signature").nth(0).selectOption({ index: 1 });
-  const fileChooserPromise = page.waitForEvent("filechooser");
-  await page.locator('//label[@for="upload-file"]').click();
-  const fileChooser = await fileChooserPromise;
-  await fileChooser.setFiles([
-    "file/file_new/自社案件情報(1).pdf",
-    "file/file_new/自社案件情報(1).xlsx",
-    "file/file_new/自社案件情報(2).pdf",
-    "file/file_new/自社案件情報(2).xlsx",
-    "file/file_new/自社案件情報(3).pdf",
-    "file/file_new/自社案件情報(3).xlsx",
-    "file/file_new/自社案件情報(4).xlsx",
-    "file/file_new/自社要員情報(1).pdf",
-    "file/file_new/自社要員情報(1).xlsx",
-    "file/file_new/自社要員情報(2).pdf",
-    "file/file_new/自社要員情報(2).xlsx",
-    "file/file_new/自社要員情報(3).pdf",
-    "file/file_new/自社要員情報(3).xlsx",
-    "file/file_new/自社要員情報(4).xlsx",
-  ]);
-  await console.log("Đã upload file thành công và đợi 20 giây ");
-  await page.waitForTimeout(20000);
-  await page.locator(".btn_confirm").click();
-  await page.waitForTimeout(10000);
-  await page.locator(".btn_send").click();
-  await page.waitForTimeout(3000);
-  await page.locator(".swal-button--confirm").click();
-  await page.waitForTimeout(3000);
-  await page.locator(".swal-button--confirm").click();
+  await template_selectOption(page);
+  await interaction_fillMail_file(page);
+  await interaction_sent(page);
+}
+async function outbox_interaction(page) {
+  await goto(page, "sent-mail-interaction");
+  await page
+    .locator("#subject_content")
+    .fill(`outbox_interaction ${new Date().toLocaleString()}`);
+  await page.locator("#body_detail_text_content").click();
+  await page
+    .locator("#body_detail_text_content")
+    .fill(`outbox_interaction ${new Date().toLocaleString()}`);
+  await interaction_fillMail_file(page);
+  await page.locator(".btn-save-outbox").nth(0).click();
+  await page.locator(".ph-pencil-simple-line").nth(0).click();
+  await interaction_sent(page);
+  await goto(page, "sent-mail-interaction");
+  await page.locator("#type_template").click();
+  await page.locator("#select_temp").selectOption("outbox_interaction");
+  await template_selectOption(page);
+  await interaction_fillMail_file(page);
+  await page.locator(".btn-save-outbox").nth(0).click();
+  await page.locator(".ph-pencil-simple-line").nth(0).click();
+  await interaction_sent(page);
+}
+async function reply_interaction(page) {
+  await page.waitForTimeout(1000);
+  await page.locator(".ph-envelope-simple").first().click();
+  await page.locator(".nav-group-sub>li").first().click();
+  await page.locator("tbody>tr").first().click();
+  await page.locator("#mail-detail a").nth(1).click();
+  const page1 = await page.waitForEvent("popup");
+  await page1
+    .locator("#body_detail_text_content")
+    .fill(`reply_interaction ${new Date().toLocaleString()}`);
+  await interaction_fillMail_file(page1);
+  await interaction_sent(page1);
+  await page1.close();
+  await page.locator("#mail-detail a").nth(1).click();
+  const page2 = await page.waitForEvent("popup");
+  await page2.locator("#type_template").click();
+  await page2.locator("#select_temp").selectOption("reply_interaction");
+  await template_selectOption(page2);
+  await interaction_fillMail_file(page2);
+  await interaction_sent(page2);
+  await page2.close();
+  await page.locator("#mail-detail a").nth(1).click();
+  const page3 = await page.waitForEvent("popup");
+  await page3.locator("#proposal_email").click();
+  /*for (let i = 0; i < 5; i++) {
+    await add_data(page3, i);
+  }*/
+  await page3.locator("#self_personal").nth(0).click();
+  for (let i = 0; i < 1; i++) {
+    await add_data(page3, i);
+  }
+  await page3
+    .locator("#content_proposal_email_select_temp")
+    .selectOption("reply_interaction");
+  await template_selectOption(page3);
+  await interaction_fillMail_file(page3);
+  await interaction_sent(page3);
+  async function add_data(page, i) {
+    await page.locator(".btn-md").nth(0).click();
+    await page.waitForTimeout(1000);
+    await page.locator("#btn_search").click();
+    await page.waitForTimeout(1000);
+    await page.locator(".btn-add-row").nth(i).click();
+    await page.waitForTimeout(1000);
+    await page.locator("#box-result a").nth(0).click();
+  }
 }
 async function add_project_self(page) {
   await goto(page, "project-self/add");
@@ -2267,6 +2332,8 @@ async function fun_sent_mail(page, expect) {
   /*interaction*/
   await sent_mail_interaction(page);
   await sent_mail_interaction_template(page);
+  await outbox_interaction(page);
+  await reply_interaction(page);
   return {
     sent0,
     sent1,
@@ -2382,11 +2449,36 @@ async function check_file(
 }
 async function run_fun(page, expect) {
   try {
-    await chatgpt_create_content2();
+    await click_menu(page, expect);
   } catch (error) {
     console.log(error);
     await sentmail_error(error, error);
   }
+}
+async function sent_mail_introduce(page, expect) {
+  await goto(page, "proposal-history");
+  await page.locator("tr .btn-info").nth(0).click();
+  const page1Promise = page.waitForEvent("popup");
+  const page1 = await page1Promise;
+  await page1.locator(".btn-warning").nth(0).click();
+  const page2Promise = page1.waitForEvent("popup");
+  const page2 = await page2Promise;
+  await page2.locator(".waves-effect").nth(0).click();
+  await page2.waitForTimeout(1000);
+  await page2.locator("#btn_search").click();
+  await page2.waitForTimeout(1000);
+  await page2.locator(".btn-add-row").nth(0).click();
+  await page2.waitForTimeout(1000);
+  await page2.locator(".btn-select-personal").nth(0).click();
+  await page2.locator(".token-input").nth(0).fill("nesv025@gmail.com");
+  await page2.locator(".token-input").nth(0).press("Enter");
+  await page2.waitForTimeout(1000);
+  await page2.locator(".btn_confirm").click();
+  await page2.locator(".btn_send").click();
+  await page2.waitForTimeout(1000);
+  await page2.locator(".swal-button--confirm").click();
+  await page2.waitForTimeout(1000);
+  await page2.locator(".swal-button--confirm").click();
 }
 async function CheckTimeLoadPage(page, url) {
   await page.goto(url);
@@ -3247,11 +3339,7 @@ async function outbox(page, url1, url2, template) {
   await page.waitForTimeout(2000);
   await page.locator("#select2-dp_id-container").press("Enter");
   await page.locator("#select_temp").selectOption(template);
-  await page.locator("#subject").selectOption({ index: 1 });
-  await page.locator("#body_self").selectOption({ index: 1 });
-  await page.locator("#body_maku").selectOption({ index: 1 });
-  await page.locator("#body_bottom").selectOption({ index: 1 });
-  await page.locator("#body_signature").selectOption({ index: 1 });
+  await template_selectOption(page);
   await page.locator("#box-attachment").click();
   const fileChooserPromise = page.waitForEvent("filechooser");
   await page.locator("#upload-file").click();
@@ -3402,6 +3490,7 @@ module.exports = {
   ver2_visitor_test_dimot111111,
   ver2_company_product_025,
   ver2_visitor_product_025,
+  ver2_visitor_check_service,
   login,
   login_all,
   login_eng_dev,

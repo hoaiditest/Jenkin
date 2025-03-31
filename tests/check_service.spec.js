@@ -2,6 +2,7 @@ import { test, expect } from "@playwright/test";
 import {
   check_class,
   login,
+  login_all,
   run_fun,
   sentmail_error,
   ver2_visitor_product_025,
@@ -59,9 +60,14 @@ test("Jpsic ", async ({ page }) => {
   }
 });
 
-// test("Engibase ", async ({ page }) => {
-//   test.setTimeout(3600000);
-//   /*login*/
-//   await login(page, ver2_visitor_product_025);
-//   await run_fun(page, expect);
-// });
+test("Engibase ", async ({ page }) => {
+  test.setTimeout(3600000);
+  /*login*/
+  await login_all(
+    page,
+    "https://visitor.engibase.com/",
+    "checkservice2@gmail.com",
+    "Duywasd123"
+  );
+  await run_fun(page, expect);
+});
