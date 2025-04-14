@@ -24,8 +24,9 @@ test("Check vps", async ({}) => {
   const di = await check_class(page);
   if (di.length > 0) {
     await sentmail_error(
-      "active_down",
-      `active_down : \n
+      page,
+      `active_down  : ${new Date().toLocaleString()}`,
+      `active_down  : ${new Date().toLocaleString()} : \n
       ${di} \n
       url : ${url}\n
       ID: nesv006 \n
@@ -53,8 +54,11 @@ test("Jpsic ", async ({ page }) => {
     const response = await page.request.get(page.url());
     if (response.status() != 200) {
       await sentmail_error(
-        "Jpsic Env_Test Status khác 200",
-        `${link[i]} \n Jpsic Env_Test Status khác 200`
+        page,
+        `Jpsic Env_Test Status khác 200 : ${new Date().toLocaleString()}`,
+        `${
+          link[i]
+        } \n Jpsic Env_Test Status khác 200 : ${new Date().toLocaleString()} \n`
       );
     }
   }

@@ -1,4 +1,6 @@
 const ExcelJS = require("exceljs");
+const fs = require("fs");
+const path = require("path");
 const Test_025 = {
   url: "https://test.engibase.com/customer/",
   email: "nesv025@learningift.com",
@@ -993,7 +995,7 @@ async function check_status(page, url) {
   const response = await page.request.get(page.url({ timeout: 210000 }));
   if (response.status() != 200) {
     console.log(response.status() + url);
-    await sentmail_errorJP(url, `Status Code: ${response.status()}`, [
+    await sentmail_errorJP(page, url, `Status Code: ${response.status()}`, [
       "hoaiditest1@gmail.com",
     ]);
     for (;;) {
@@ -1002,9 +1004,12 @@ async function check_status(page, url) {
       const response2 = await page.request.get(page.url());
       if (response2.status() != 200) {
         console.log(response2.status() + url);
-        await sentmail_errorJP(url, `Status Code: ${response2.status()}`, [
-          "hoaiditest1@gmail.com",
-        ]);
+        await sentmail_errorJP(
+          page,
+          url,
+          `Status Code: ${response2.status()}`,
+          ["hoaiditest1@gmail.com"]
+        );
         // await page.goBack();
         console.log("Check status again");
         await page.waitForTimeout(600000);
@@ -1024,14 +1029,14 @@ async function check_noty_error(page, url) {
   if (check_noty) {
     const text = await noty.textContent();
     console.log("noty_error " + url + "  " + text);
-    await sentmail_errorJP(url, `Alert Error : ${text} `);
+    await sentmail_errorJP(page, url, `Alert Error : ${text} `);
     for (;;) {
       await page.reload();
       await page.waitForTimeout(10000);
       const check_noty2 = await noty.isVisible();
       if (check_noty2) {
         await console.log("noty_error " + url + "  " + text);
-        await sentmail_errorJP(url, `Alert Error : ${text} `);
+        await sentmail_errorJP(page, url, `Alert Error : ${text} `);
         console.log("Check Notification again");
         await page.waitForTimeout(600000);
       } else {
@@ -2109,33 +2114,33 @@ async function chatgpt_create_content2() {
   await page.locator('button[data-testid="login-button"]').click();
   await page.locator("#email-input").fill("hoaiditest1@gmail.com");
   await page.locator(".continue-btn").click();
-  await page.locator("#password").fill("Duywasd123");
+  try {
+    await page.locator("#password").fill("Duywasd123", { timeout: 10000 });
+  } catch (error) {
+    await page.locator("//input[@type='password']").fill("Duywasd123");
+  }
   await page.locator('button[type="submit"]').nth(0).click();
   await page.waitForTimeout(5000);
   await page.goto(
     "https://chatgpt.com/share/677602ce-3bf0-8002-ae9a-fcbb785f0182"
   );
   await page.waitForTimeout(5000);
-  const page2 = await open_browser("didimimi1999dimi");
   async function create_sent(type, i) {
     await page
       .locator("#prompt-textarea")
       .fill("Hãy gửi cho tôi email giới thiệu " + type);
     await page.locator('//button[@data-testid="send-button"]').click();
-    /*try {
-      await page.locator(".btn-primary>div").first().click({ timeout: 5000 });
-    } catch (error) {}*/
-    await page.waitForTimeout(30000);
-    if (type == "nhân sự" && i == 0) {
+    await page.waitForTimeout(50000);
+    /*if (type == "nhân sự" && i == 0) {
       await page.waitForTimeout(3000);
       await page
         .locator("#prompt-textarea")
         .fill("Hãy gửi cho tôi email giới thiệu " + type);
       await page.locator('//button[@data-testid="send-button"]').click();
     }
-    await page.waitForTimeout(50000);
+    await page.waitForTimeout(50000);*/
     const article = await page.$$("article");
-    await console.log(`Số lượng thẻ: ${article.length}`);
+    // await console.log(`Số lượng thẻ: ${article.length}`);
     const text = await page
       .locator("article")
       .nth(article.length - 1)
@@ -2146,37 +2151,20 @@ async function chatgpt_create_content2() {
     const content = contentMatch
       ? contentMatch[1].trim()
       : "Không tìm thấy Nội dung";
-    await page2.getByText("Soạn thư").click();
+    const mail_have = "dimot111111@gmail.com";
     if (type == "nhân sự") {
       const infor_per = await mail_infor(content);
       const infor = infor_per.name_per + RandomNumber(3);
       await create_fileExcel(infor);
-      await page2
-        .locator("//input[@type='file']")
-        .setInputFiles(`file/auto/${infor}.xlsx`);
+      await sentmail_file(`${title}`, `${content}`, `${infor}.xlsx`, mail_have);
     } else {
       const infor_project = await mail_infor(content);
       const infor = infor_project.name_project + RandomNumber(3);
       await create_fileExcel(infor);
-      await page2
-        .locator("//input[@type='file']")
-        .setInputFiles(`file/auto/${infor}.xlsx`);
+      await sentmail_file(`${title}`, `${content}`, `${infor}.xlsx`, mail_have);
     }
-    await page2
-      .locator('//input[@aria-label="Tới người nhận"]')
-      .fill("dimot111111@gmail.com");
-    await page2
-      .locator('//input[@aria-label="Tiêu đề"]')
-      .fill("env_test env_product " + title);
-    await page2.locator('//div[@aria-label="Nội dung thư"]').fill(content);
-    await page2.waitForTimeout(5000);
-    await page2
-      .locator('//table[@role="group"]//div[@role="button"]')
-      .first()
-      .click();
-    await page2.waitForTimeout(10000);
   }
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < 10; i++) {
     await create_sent("nhân sự", i);
     await create_sent("dự án", i);
   }
@@ -2442,6 +2430,7 @@ async function check_file(
   }
   if (mails.length > 0) {
     await sentmail_error(
+      null,
       "Sent Mail : Thiếu hoặc không có file" + RandomNumber(3),
       mails
     );
@@ -2452,8 +2441,16 @@ async function run_fun(page, expect) {
     await click_menu(page, expect);
   } catch (error) {
     console.log(error);
-    await sentmail_error(error, error);
+    await sentmail_error(page, error, error);
   }
+}
+async function check_mail(page, expect) {
+  await goto(page, "mail/inbox/12");
+  await page.waitForTimeout(1000);
+  const time = await page
+    .locator("tr:nth-child(1)>td:nth-child(3)")
+    .textContent();
+  console.log(time);
 }
 async function sent_mail_introduce(page, expect) {
   await goto(page, "proposal-history");
@@ -2554,8 +2551,9 @@ async function check_sent_mail_detail_2(params) {
     await page1.close();
   }
 }
-async function sentmail_errorJP(url, content, mail_error) {
+async function sentmail_errorJP(page, url, content, mail_error) {
   await sentmail_error(
+    page,
     `【緊急】${url} に問題が発生しています ${new Date().toLocaleString(
       "ja-JP",
       { timeZone: "Asia/Tokyo" }
@@ -2572,7 +2570,22 @@ ${content}
     mail_error
   );
 }
-async function sentmail_error(title, content, mail_error) {
+async function sentmail_error(page = null, title, content, mail_error) {
+  try {
+    await page.screenshot({ path: "screenshot.png" }, { timeout: 3000 });
+  } catch (error) {}
+
+  const attachments = [
+    {
+      filename: "screenshot.png",
+      path: "screenshot.png",
+      cid: "img_html",
+    },
+  ];
+  const html = `
+  <div>${content.replace(/\n/g, "<br/>")}</div>
+  <p><img src="cid:img_html" /></p> `;
+
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
@@ -2585,9 +2598,34 @@ async function sentmail_error(title, content, mail_error) {
   await transporter.sendMail({
     to: ["hoaiditest@gmail.com", `${mail_error}`],
     subject: `${title}`,
-    text: `${content}`,
+    html,
+    attachments,
   });
   console.log("sentmail_error : Done");
+}
+async function sentmail_file(title, content, file, email) {
+  const attachments = [
+    {
+      filename: file,
+      path: `file/auto/${file}`,
+      contentType: "text/csv",
+    },
+  ];
+  const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+      user: "didimimi1999dimi@gmail.com",
+      pass: "ocgj ibma nphi ivxa",
+    },
+  });
+  await transporter.sendMail({
+    to: email,
+    subject: `${title}`,
+    text: `${content}`,
+    attachments,
+  });
 }
 async function direct_mail_ver2(page, expect) {
   for (let i = 1; i < 5; i++) {
@@ -3470,6 +3508,29 @@ async function check_class(page) {
     vps.push(text + "\n");
   }
   return vps;
+}
+async function recordVideo() {
+  const browser = await chromium.launch();
+  const context = await browser.newContext({
+    recordVideo: {
+      dir: "file/",
+      size: { width: 1280, height: 720 },
+    },
+  });
+
+  const page = await context.newPage();
+  await page.goto("https://www.google.com/");
+  await page.waitForTimeout(3000);
+  const videoPath = await page.video().path();
+
+  await context.close();
+  await browser.close();
+
+  const newVideoName = "video.webm";
+  const newPath = path.join("file/", newVideoName);
+
+  fs.renameSync(videoPath, newPath); // Đổi tên file
+  console.log(`Video đã được lưu thành: ${newPath}`);
 }
 module.exports = {
   Test_025,
