@@ -2119,7 +2119,14 @@ async function chatgpt_create_content2() {
   } catch (error) {
     await page.locator("//input[@type='password']").fill("Duywasd123");
   }
-  await page.locator('button[type="submit"]').nth(0).click();
+  try {
+    await page.locator('button[type="submit"]').nth(0).click({ timeout: 5000 });
+  } catch (error) {
+    await page
+      .locator('//*[text()="Continue"]')
+      .nth(0)
+      .click({ timeout: 5000 });
+  }
   await page.waitForTimeout(5000);
   await page.goto(
     "https://chatgpt.com/share/677602ce-3bf0-8002-ae9a-fcbb785f0182"
@@ -2164,7 +2171,7 @@ async function chatgpt_create_content2() {
       await sentmail_file(`${title}`, `${content}`, `${infor}.xlsx`, mail_have);
     }
   }
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 2; i++) {
     await create_sent("nhân sự", i);
     await create_sent("dự án", i);
   }
@@ -2579,12 +2586,8 @@ async function sentmail_error(page = null, title, content, mail_error) {
     {
       filename: "screenshot.png",
       path: "screenshot.png",
-      cid: "img_html",
     },
   ];
-  const html = `
-  <div>${content.replace(/\n/g, "<br/>")}</div>
-  <p><img src="cid:img_html" /></p> `;
 
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -2598,7 +2601,7 @@ async function sentmail_error(page = null, title, content, mail_error) {
   await transporter.sendMail({
     to: ["hoaiditest@gmail.com", `${mail_error}`],
     subject: `${title}`,
-    html,
+    html: `${content}`,
     attachments,
   });
   console.log("sentmail_error : Done");
@@ -2633,8 +2636,16 @@ async function direct_mail_ver2(page, expect) {
     const a = await get_number(page);
     console.log(`Trước ${a.numbers[0]}`);
     await goto(page, "direct-mail/add");
-    await page.locator("#name").fill(formattedDate + " direct_mail_2");
+    await page.locator("#name").fill(formattedDate + " direct_mail" + i);
     await search_bp(page);
+    /*for (let i = 0; i < 10; i++) {
+      await page.waitForTimeout(1000);
+      await page.locator("#checkall").click();
+      await page.waitForTimeout(1000);
+      await page.locator(".btn-add-all").click();
+      await page.waitForTimeout(1000);
+      await page.locator("#paginator_next").nth(0).click();
+    }*/
     await page.locator("#proposal_type").selectOption({ index: i });
     await page.waitForTimeout(3000);
     await page.locator("#btn_save").click();
