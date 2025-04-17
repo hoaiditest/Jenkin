@@ -2112,8 +2112,21 @@ async function chatgpt_create_content2() {
   const page = await context.newPage();
   await page.goto("https://chatgpt.com/auth/login");
   await page.locator('button[data-testid="login-button"]').click();
-  await page.locator("#email-input").fill("hoaiditest1@gmail.com");
-  await page.locator(".continue-btn").click();
+  try {
+    await page
+      .locator("#email-input")
+      .fill("hoaiditest1@gmail.com", { timeout: 10000 });
+  } catch (error) {
+    await page.locator("//input[@type='email']").fill("hoaiditest1@gmail.com");
+  }
+  try {
+    await page.locator(".continue-btn").click({ timeout: 10000 });
+  } catch (error) {
+    await page
+      .locator('//*[text()="Continue"]')
+      .nth(0)
+      .click({ timeout: 1000 });
+  }
   try {
     await page.locator("#password").fill("Duywasd123", { timeout: 10000 });
   } catch (error) {
@@ -2127,7 +2140,7 @@ async function chatgpt_create_content2() {
       .nth(0)
       .click({ timeout: 5000 });
   }
-  await page.waitForTimeout(5000);
+  await page.waitForTimeout(10000);
   await page.goto(
     "https://chatgpt.com/share/677602ce-3bf0-8002-ae9a-fcbb785f0182"
   );
@@ -2600,8 +2613,8 @@ async function sentmail_error(page = null, title, content, mail_error) {
   });
   await transporter.sendMail({
     to: ["hoaiditest@gmail.com", `${mail_error}`],
-    subject: `${title}`,
-    html: `${content}`,
+    subject: title,
+    text: content,
     attachments,
   });
   console.log("sentmail_error : Done");
@@ -2625,8 +2638,8 @@ async function sentmail_file(title, content, file, email) {
   });
   await transporter.sendMail({
     to: email,
-    subject: `${title}`,
-    text: `${content}`,
+    subject: title,
+    text: content,
     attachments,
   });
 }
