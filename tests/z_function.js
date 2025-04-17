@@ -2461,7 +2461,7 @@ async function run_fun(page, expect) {
     await click_menu(page, expect);
   } catch (error) {
     console.log(error);
-    await sentmail_error(page, error, error);
+    await sentmail_error(page, `${error}`, `${error}`);
   }
 }
 async function check_mail(page, expect) {
