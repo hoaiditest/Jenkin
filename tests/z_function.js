@@ -493,7 +493,7 @@ async function sent(page, template) {
     "file/file_new/自社要員情報(3).xlsx",
     "file/file_new/自社要員情報(4).xlsx",
   ]);
-  await page.waitForTimeout(10000);
+  await page.waitForTimeout(20000);
   let web_info_per;
   try {
     web_info_per = await page
@@ -508,6 +508,10 @@ async function sent(page, template) {
   } catch (error) {
     await page.locator(".btn_confirm").nth(0).click();
   }
+  await page.waitForTimeout(10000);
+  try {
+    await page.locator(".btn_confirm").nth(0).click({ timeout: 5000 });
+  } catch (error) {}
   let mail_sent = [];
   await page.waitForTimeout(3000);
   const a = page.locator("tr>.company-mail");
@@ -2592,7 +2596,8 @@ ${content}
 }
 async function sentmail_error(page = null, title, content, mail_error) {
   try {
-    await page.screenshot({ path: "screenshot.png" }, { timeout: 3000 });
+    await page.waitForTimeout(3000);
+    await page.screenshot({ path: "screenshot.png" }, { timeout: 10000 });
   } catch (error) {}
 
   const attachments = [
