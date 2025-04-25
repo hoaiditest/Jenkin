@@ -2455,8 +2455,8 @@ async function check_file(
   if (mails.length > 0) {
     await sentmail_error(
       null,
-      "Sent Mail : Thiếu hoặc không có file" + RandomNumber(3),
-      mails
+      `Sent Mail : Thiếu hoặc không có file ${RandomNumber(3)}`,
+      `${mails}`
     );
   }
 }
