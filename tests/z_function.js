@@ -3053,6 +3053,16 @@ async function open_browser(mail) {
   await page.waitForTimeout(3000);
   return page;
 }
+async function delete_all_mail() {
+  for (let a = 0; a < mail.length; a++) {
+    const page = await open_browser(`${mail[a]}`);
+    await page.locator('span[role="checkbox"]').click();
+    await page.waitForTimeout(1000);
+    await page.locator('div[aria-label="Delete"]').click();
+    await page.waitForTimeout(1000);
+    await page.close();
+  }
+}
 async function delete_mail() {
   for (let a = 0; a < mail.length; a++) {
     const page = await open_browser(`${mail[a]}`);
