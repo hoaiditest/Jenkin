@@ -2132,17 +2132,22 @@ async function chatgpt_create_content2() {
       .click({ timeout: 1000 });
   }
   try {
-    await page.locator("#password").fill("Duywasd123", { timeout: 10000 });
+    await page
+      .locator("//input[@type='password']")
+      .fill("Duywasd123", { timeout: 10000 });
   } catch (error) {
-    await page.locator("//input[@type='password']").fill("Duywasd123");
+    await page.locator("#password").fill("Duywasd123", { timeout: 10000 });
   }
   try {
-    await page.locator('button[type="submit"]').nth(0).click({ timeout: 5000 });
-  } catch (error) {
     await page
       .locator('//*[text()="Continue"]')
       .nth(0)
-      .click({ timeout: 5000 });
+      .click({ timeout: 10000 });
+  } catch (error) {
+    await page
+      .locator('button[type="submit"]')
+      .nth(0)
+      .click({ timeout: 10000 });
   }
   await page.waitForTimeout(10000);
   await page.goto(
@@ -3059,7 +3064,7 @@ async function delete_all_mail() {
     await page.locator('span[role="checkbox"]').click();
     await page.waitForTimeout(1000);
     await page.locator('div[aria-label="Delete"]').click();
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(3000);
     await page.close();
   }
 }
