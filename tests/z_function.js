@@ -2118,23 +2118,25 @@ async function chatgpt_create_content2() {
   await page.locator('button[data-testid="login-button"]').click();
   try {
     await page
-      .locator("#email-input")
+      .locator("//input[@type='email']")
       .fill("hoaiditest1@gmail.com", { timeout: 10000 });
   } catch (error) {
-    await page.locator("//input[@type='email']").fill("hoaiditest1@gmail.com");
+    await page
+      .locator("#email-input")
+      .fill("hoaiditest1@gmail.com", { timeout: 10000 });
   }
   try {
-    await page.locator(".continue-btn").click({ timeout: 10000 });
-  } catch (error) {
     await page
       .locator('//*[text()="Continue"]')
       .nth(0)
-      .click({ timeout: 1000 });
+      .click({ timeout: 10000 });
+  } catch (error) {
+    await page.locator(".continue-btn").click({ timeout: 10000 });
   }
   try {
     await page
       .locator("//input[@type='password']")
-      .fill("Duywasd123", { timeout: 10000 });
+      .fill("Duywasd123", { timeout: 90000 });
   } catch (error) {
     await page.locator("#password").fill("Duywasd123", { timeout: 10000 });
   }
@@ -2149,7 +2151,7 @@ async function chatgpt_create_content2() {
       .nth(0)
       .click({ timeout: 10000 });
   }
-  await page.waitForTimeout(10000);
+  await page.waitForTimeout(20000);
   await page.goto(
     "https://chatgpt.com/share/677602ce-3bf0-8002-ae9a-fcbb785f0182"
   );
