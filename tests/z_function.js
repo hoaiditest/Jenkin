@@ -1707,8 +1707,10 @@ async function outbox_interaction(page) {
   await interaction_sent(page);
 }
 async function reply_interaction(page) {
-  await page.waitForTimeout(1000);
+  await goto(page, "");
+  await page.waitForTimeout(3000);
   await page.locator(".ph-envelope-simple").first().click();
+  await page.waitForTimeout(3000);
   await page.locator(".nav-group-sub>li").first().click();
   await page.locator("tbody>tr").first().click();
   await page.locator("#mail-detail a").nth(1).click();
