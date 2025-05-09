@@ -3461,7 +3461,9 @@ async function outbox(page, url1, url2, template) {
   await goto(page, url2);
   await page.waitForTimeout(3000);
   await page.locator(".ph-pencil-simple-line").first().click();
+  await page.waitForTimeout(3000);
   await page.locator(".btn_confirm").first().click();
+  await page.waitForTimeout(3000);
   await page.locator("#send").click();
   await page.waitForTimeout(5000);
   await page.locator(".swal-button--confirm").click();
