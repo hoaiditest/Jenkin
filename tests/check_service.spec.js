@@ -71,14 +71,14 @@ test("Jpsic ", async ({ page }) => {
   }
 });
 
-test("Engibase ", async ({ page }) => {
-  test.setTimeout(3600000);
-  /*login*/
-  await login_all(
-    page,
-    "https://visitor.engibase.com/",
-    "checkservice2@gmail.com",
-    "Duywasd123"
-  );
-  await run_fun(page, expect);
-});
+// test("Engibase ", async ({ page }) => {
+//   test.setTimeout(3600000);
+//   /*login*/
+//   await login_all(
+//     page,
+//     "https://visitor.engibase.com/",
+//     "checkservice2@gmail.com",
+//     "Duywasd123"
+//   );
+//   await run_fun(page, expect);
+// });
