@@ -2477,6 +2477,34 @@ async function run_fun(page, expect) {
     await sentmail_error(page, `${error}`, `${error}`);
   }
 }
+async function tooltip(page, expect) {
+  await page.waitForTimeout(3000);
+  const menu = await page.locator(".sidebar-content a").all();
+  const menu_customer_InnerTexts = await page
+    .locator(".sidebar-content a")
+    .allInnerTexts();
+  await console.log(menu.length);
+  for (let a = 0; a < menu.length; a++) {
+    // await console.log(menu[a]);
+    if (menu_customer_InnerTexts[a] != "ログアウト") {
+      const url1 = await page.url();
+      await page.waitForTimeout(1000);
+      await menu[a].click({ timeout: 240000 });
+      console.log(menu[a]);
+      const b = await page.locator(".ph-question").count();
+      for (let i = 0; i < b; i++) {
+        try {
+          await page.locator(".ph-question").nth(i).click({ timeout: 3000 });
+          await page.waitForTimeout(3000);
+          await page.reload();
+          await page.waitForTimeout(3000);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    }
+  }
+}
 async function check_mail(page, expect) {
   await goto(page, "mail/inbox/12");
   await page.waitForTimeout(1000);
