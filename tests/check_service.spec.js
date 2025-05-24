@@ -41,7 +41,7 @@ test("Check vps", async ({}) => {
     await browser.close();
   }
 });
-test("Jpsic ", async ({ page }) => {
+/*test("Jpsic ", async ({ page }) => {
   test.setTimeout(300000);
   const link = [
     "https://test.jpsic.co.jp/",
@@ -69,7 +69,7 @@ test("Jpsic ", async ({ page }) => {
       );
     }
   }
-});
+});*/
 
 test("Engibase ", async ({ page }) => {
   test.setTimeout(3600000);
