@@ -9,7 +9,7 @@ import {
 } from "./z_function";
 const { chromium } = require("playwright");
 
-/*test("Check vps", async ({}) => {
+test("Check vps", async ({}) => {
   test.setTimeout(240000);
   let link = [
     "https://mta.engibase.com/haproxy?stats",
@@ -40,8 +40,8 @@ const { chromium } = require("playwright");
     }
     await browser.close();
   }
-});*/
-/*test("Jpsic ", async ({ page }) => {
+});
+test("Jpsic ", async ({ page }) => {
   test.setTimeout(300000);
   const link = [
     "https://test.jpsic.co.jp/",
@@ -69,7 +69,7 @@ const { chromium } = require("playwright");
       );
     }
   }
-});*/
+});
 
 test("Engibase ", async ({ page }) => {
   test.setTimeout(3600000);
