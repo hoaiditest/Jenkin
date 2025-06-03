@@ -4220,5 +4220,6 @@ module.exports = {
   material_add,
   check_class,
   sentmail_error,
+  sentmail_errorJP,
   ver2_add_personnel_self,
 };
