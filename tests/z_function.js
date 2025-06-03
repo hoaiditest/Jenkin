@@ -1,83 +1,20 @@
 const ExcelJS = require("exceljs");
 const fs = require("fs");
 const path = require("path");
-const Test_025 = {
-  url: "https://test.engibase.com/customer/",
-  email: "nesv025@learningift.com",
-  pw: "Duywasd123",
-};
-
-const Test_hoaiditest = {
-  url: "https://test.engibase.com/customer/",
-  email: "hoaiditest@gmail.com",
-  pw: "Duywasd123",
-};
-
-const Product_006 = {
-  url: "https://customer.engibase.com/",
-  email: "groot.test.006@learningift.com",
-  pw: "abc123456",
-};
-const Product_025 = {
-  url: "https://customer.engibase.com/",
-  email: "nesv025@learningift.com",
-  pw: "Duywasd123",
-};
-
-const Product_hoaiditest = {
-  url: "https://customer.engibase.com/",
-  email: "hoaiditest@learningift.com",
-  pw: "Duywasd123",
-};
-const Product_hoangoisan = {
-  url: "https://customer.engibase.com/",
-  email: "hoangoisan@learningift.com",
-  pw: "Duywasd123",
-};
 const Product_manager = {
   url: "https://manager.engibase.com/",
   email: "nesv025@gmail.com",
   pw: "Duywasd123",
 };
 const Test_manager = {
-  url: "https://test.engibase.com/manager",
+  url: "https://manager.test.engibase.com/",
   email: "nesv025@gmail.com",
   pw: "Duywasd123",
 };
 
-const staging_025 = {
-  url: "https://staging.engibase.com/customer/",
-  email: "nesv025@learningift.com",
-  pw: "Duywasd123",
-};
-const test_dihai = {
-  url: "https://test.engibase.com/customer/",
-  email: "dihai222222@learningift.com",
-  pw: "Duywasd123",
-};
-const product_dihai = {
-  url: "https://customer.engibase.com/",
-  email: "dihai222222@learningift.com",
-  pw: "Duywasd123",
-};
-const visitor_test_dihai = {
-  url: "https://test.engibase.com/visitor/",
-  email: "hoaiditest2@gmail.com",
-  pw: "Duywasd123",
-};
-const visitor_product_dihai = {
-  url: "https://visitor.engibase.com/",
-  email: "hoaiditest2@gmail.com",
-  pw: "Duywasd123",
-};
 const company_test_025 = {
   url: "https://company.test.engibase.com/",
   email: "nesv025@gmail.com",
-  pw: "Duywasd123",
-};
-const company_test_dihai = {
-  url: "https://company.test.engibase.com/",
-  email: "dihai222222@gmail.com",
   pw: "Duywasd123",
 };
 const ver2_visitor_test_dimot111111 = {
@@ -2058,7 +1995,7 @@ async function login_2_browser(page) {
   const browser1 = await chromium.launch();
   const context1 = await browser1.newContext();
   const page1 = await context1.newPage();
-  await login(page1, Product_025);
+  await login(page1);
   await page.locator(".logo-light-mode").click();
   await page.waitForTimeout(3000);
   await page.locator("//img").click();
@@ -4214,21 +4151,9 @@ async function recordVideo() {
   console.log(`Video đã được lưu thành: ${newPath}`);
 }
 module.exports = {
-  Test_025,
-  Test_hoaiditest,
-  test_dihai,
-  staging_025,
-  Product_006,
-  Product_025,
-  product_dihai,
-  Product_hoangoisan,
-  Product_hoaiditest,
   Test_manager,
   Product_manager,
-  visitor_product_dihai,
-  visitor_test_dihai,
   company_test_025,
-  company_test_dihai,
   ver2_visitor_test_dimot111111,
   ver2_company_product_025,
   ver2_visitor_product_025,
