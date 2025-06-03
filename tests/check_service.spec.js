@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import {
   check_class,
+  click_menu,
   login,
   login_all,
   run_fun,
@@ -73,12 +74,16 @@ test("Jpsic ", async ({ page }) => {
 
 test("Engibase ", async ({ page }) => {
   test.setTimeout(3600000);
-  /*login*/
-  await login_all(
-    page,
-    "https://visitor.engibase.com/",
-    "checkservice2@gmail.com",
-    "Duywasd123"
-  );
-  await run_fun(page, expect);
+  try {
+    /*login*/
+    await login_all(
+      page,
+      "https://visitor.engibase.com/",
+      "checkservice2@gmail.com",
+      "Duywasd123"
+    );
+    await click_menu(page, expect);
+  } catch (error) {
+    await sentmail_error(page, `${error}`, `${error}`);
+  }
 });

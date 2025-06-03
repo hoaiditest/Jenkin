@@ -328,8 +328,6 @@ async function ver2_add_personnel_self(page) {
   await page
     .locator("#preferred_project")
     .fill("Hope Case " + RandomName() + RandomNumber(3));
-  await page.locator("#min_salary").fill(`${RandomNumber(2)}000`);
-  await page.locator("#max_salary").fill(`${RandomNumber(3)}000`);
   await page.locator("#note").fill("Note " + RandomName() + RandomNumber(3));
   await page
     .locator('input[name="tags"]')
@@ -337,61 +335,115 @@ async function ver2_add_personnel_self(page) {
     .fill("TagDi " + RandomName() + RandomNumber(3));
   await page.waitForTimeout(1000);
   await page.locator('input[name="tags"]').first().press("Enter");
-  await page.locator(".btn-select-skills").click();
-  await page.locator("#skill-83").click();
-  await page.locator("#skill-85").click();
-  await page.locator("#skill-108").click();
-  await page.locator("#skill-16").click();
-  await page.locator(".choose-skills").click();
   await select(page, 2);
-  await page.locator("#birth_year").selectOption(`199${RandomNumber(1)}`);
-  await page.locator("#zipcode").fill(`1${RandomNumber(1)}00000`);
+  await page
+    .locator("#gender")
+    .selectOption({ index: Math.floor(Math.random() * 3) + 1 });
+  await page
+    .locator("#min_salary")
+    .fill(`${Math.floor(Math.random() * 4) + 1}0000`);
+  await page
+    .locator("#max_salary")
+    .fill(`${Math.floor(Math.random() * (10 - 5 + 1)) + 5}0000`);
+  await page
+    .locator("#birth_year")
+    .selectOption(`${Math.floor(Math.random() * (2006 - 1984 + 1)) + 1984}`);
+  await page
+    .locator("#zipcode")
+    .fill(`1${Math.floor(Math.random() * 10) + 1}00000`);
   await page.waitForTimeout(1000);
   await page.locator("#zipcode").press("0");
+  await page.waitForTimeout(1000);
+  const prefecture = await page.locator("#prefecture>option").count();
+  await page.locator("#prefecture").selectOption({
+    index: Math.floor(Math.random() * (prefecture - 1)) + 1,
+  });
+  await page.waitForTimeout(1000);
+  const route = await page.locator("#route>option").count();
+  await page
+    .locator("#route")
+    .selectOption({ index: Math.floor(Math.random() * (route - 1)) + 1 });
+  await page.waitForTimeout(1000);
+  const station = await page.locator("#station>option").count();
+  await page
+    .locator("#station")
+    .selectOption({ index: Math.floor(Math.random() * (station - 1)) + 1 });
+  await page.waitForTimeout(1000);
+  await page.locator(".btn-select-skills").click();
+  for (let i = 0; i < 10; i++) {
+    await page
+      .locator("#tab-言語・サービス input")
+      .nth(Math.floor(Math.random() * 244))
+      .click();
+    await page.waitForTimeout(1000);
+  }
+  await page.locator(".choose-skills").click();
+  await page.waitForTimeout(1000);
+  const skill_exp = await page.locator(".skill_required").count();
+  for (let i = 0; i < skill_exp; i++) {
+    await page
+      .locator(".skill_required")
+      .nth(i)
+      .selectOption({ index: Math.floor(Math.random() * 10) + 1 });
+  }
+  await page
+    .locator("#cpt_id")
+    .selectOption({ index: Math.floor(Math.random() * 4) });
+  const nation = await page.locator("select[name='nation']>option").count();
+  await page
+    .locator("select[name='nation']")
+    .selectOption({ index: Math.floor(Math.random() * nation) });
+  await page.waitForTimeout(1000);
+  const intv_start = await page.locator("#intv_start>option").count();
+  await page
+    .locator("#intv_start")
+    .selectOption({ index: Math.floor(Math.random() * intv_start) });
   await page.waitForTimeout(1000);
   await page.locator("#btn_update").click();
   await page.waitForTimeout(5000);
 }
 async function add_skill_sheet(page) {
+  /*console.log(Random(array["languages"]));
+  console.log(Random(array["tools"]));
+  console.log(Random(array["skills"]));
+  console.log(Random(array["OS"]));
+  console.log(Random(array["DB"]));
+  console.log(Random(array["network"]));*/
   await goto(page, "personnel-self");
   await page.locator(".ph-plus-circle").nth(0).click();
   const page1Promise = page.waitForEvent("popup");
   const page1 = await page1Promise;
-  await page1.setViewportSize({ width: 1500, height: 700 });
+  for (let i = 0; i < 2; i++) {
+    await page1.locator(".ph-arrow-down").nth(0).click();
+  }
+  await page1.waitForTimeout(3000);
+  const inputElements = await page1.$$("input, textarea");
+  for (let i = 0; i < inputElements.length; i++) {
+    try {
+      await inputElements[i].click({ timeout: 1000 });
+      await page1.waitForTimeout(2000);
+      await inputElements[i].fill(Random(array["skills"]), { timeout: 1000 });
+      await page1.keyboard.press("Enter");
+    } catch (error) {}
+  }
+  const select = await page1.$$("select");
+  for (let i = 0; i < select.length; i++) {
+    try {
+      const secondSelectOptions = await page1
+        .locator("select")
+        .nth(i)
+        .locator("option")
+        .count();
+      await select[i].selectOption(
+        { index: Math.floor(Math.random() * (secondSelectOptions - 3)) + 3 },
+        { timeout: 1000 }
+      );
+      await page1.waitForTimeout(500);
+    } catch (error) {}
+  }
+  await page1.locator(".btn_save").click();
   await page1.waitForTimeout(10000);
-  await select(page1, 2);
-  await textbox(page1);
-  await page1.waitForTimeout(1000);
-  // Đếm số lượng tùy chọn trong selectbox
-  const start_time_yeah = await page1.$$eval(
-    "select#start_time_yeah option",
-    (options) => options.length
-  );
-  console.log(`Số lượng tùy chọn trong selectbox là: ${start_time_yeah}`);
-  await page1
-    .locator("#start_time_yeah")
-    .selectOption({ index: start_time_yeah - 2 });
-  const position = await page1.$$eval(
-    "select#position option",
-    (options) => options.length
-  );
-  console.log(`Số lượng tùy chọn trong selectbox là: ${position}`);
-  /*await page1.locator("#position").selectOption({ index: position - 1 });
-  await page1
-    .locator('//span[@class="select2-selection__rendered"]//span')
-    .first()
-    .click();
-  await page1.waitForTimeout(3000);
-  await page1.keyboard.press("Enter");
-  await page1.waitForTimeout(3000);
-  await page1
-    .locator('//span[@class="select2-selection__rendered"]//span')
-    .first()
-    .click();*/
-  await page1.waitForTimeout(3000);
-  await page1.keyboard.press("Enter");
-  await page1.locator("#btn_save").first().click();
-  await page1.waitForTimeout(10000);
+  await page1.close();
   await console.log("add_skill_sheet thành công và đợi 10 giây ");
 }
 async function add_group(page, name) {
@@ -458,6 +510,7 @@ async function direct_personnel(page) {
 
 async function direct_personnel_self(page) {
   await goto(page, "personnel-group/add-self");
+  await page.locator("#memo").fill("[テスト][Checking service]Japan");
   await add_group(page, `${formattedDate} direct_personnel_self`);
 }
 
@@ -466,34 +519,44 @@ async function sent(page, template) {
   await page.waitForTimeout(5000);
   await page.locator("#select2-dp_id-container").press("Enter");
   await page.waitForTimeout(3000);
-  // const select_temp = await page
-  //   .locator('//select[@id="select_temp"]//option')
-  //   .count();
-  // console.log(`Số lượng tùy chọn trong selectbox là: ${select_temp}`);
-  // await page.waitForTimeout(10000);
+  while (
+    !(await page.isVisible("#personnel_info_2")) &&
+    !(await page.isVisible("#project_info_2"))
+  ) {
+    console.log("Chưa thấy Personnel/Project, nhấn lại nút...");
+    await page.locator("#select2-dp_id-container").click();
+    await page.waitForTimeout(3000);
+    await page.locator("#select2-dp_id-container").press("Enter");
+    await page.waitForTimeout(3000);
+  }
   await page.locator("#select_temp").selectOption(template);
   await template_selectOption(page);
-  await page.locator("#box-attachment").click();
-  const fileChooserPromise = page.waitForEvent("filechooser");
-  await page.locator("#upload-file").click();
-  const fileChooser = await fileChooserPromise;
-  await fileChooser.setFiles([
-    "file/file_new/自社案件情報(1).pdf",
-    "file/file_new/自社案件情報(1).xlsx",
-    "file/file_new/自社案件情報(2).pdf",
-    "file/file_new/自社案件情報(2).xlsx",
-    "file/file_new/自社案件情報(3).pdf",
-    "file/file_new/自社案件情報(3).xlsx",
-    "file/file_new/自社案件情報(4).xlsx",
-    "file/file_new/自社要員情報(1).pdf",
-    "file/file_new/自社要員情報(1).xlsx",
-    "file/file_new/自社要員情報(2).pdf",
-    "file/file_new/自社要員情報(2).xlsx",
-    "file/file_new/自社要員情報(3).pdf",
-    "file/file_new/自社要員情報(3).xlsx",
-    "file/file_new/自社要員情報(4).xlsx",
-  ]);
-  await page.waitForTimeout(20000);
+  while (
+    (await page.locator("#box-attachment span:nth-child(1)").count()) < 14
+  ) {
+    console.log("Chưa thấy File, Upload lại...");
+    await page.locator("#box-attachment").click();
+    const fileChooserPromise = page.waitForEvent("filechooser");
+    await page.locator("#upload-file").click();
+    const fileChooser = await fileChooserPromise;
+    await fileChooser.setFiles([
+      "file/file_new/自社案件情報(1).pdf",
+      "file/file_new/自社案件情報(1).xlsx",
+      "file/file_new/自社案件情報(2).pdf",
+      "file/file_new/自社案件情報(2).xlsx",
+      "file/file_new/自社案件情報(3).pdf",
+      "file/file_new/自社案件情報(3).xlsx",
+      "file/file_new/自社案件情報(4).xlsx",
+      "file/file_new/自社要員情報(1).pdf",
+      "file/file_new/自社要員情報(1).xlsx",
+      "file/file_new/自社要員情報(2).pdf",
+      "file/file_new/自社要員情報(2).xlsx",
+      "file/file_new/自社要員情報(3).pdf",
+      "file/file_new/自社要員情報(3).xlsx",
+      "file/file_new/自社要員情報(4).xlsx",
+    ]);
+    await page.waitForTimeout(20000);
+  }
   let web_info_per;
   try {
     web_info_per = await page
@@ -905,6 +968,399 @@ function RandomName() {
   var finalName = nameList[Math.floor(Math.random() * nameList.length)];
   return finalName;
 }
+var array = {
+  languages: [
+    "HTML5",
+    "CSS3",
+    "Sass",
+    "Less",
+    "Stylus",
+    "Python",
+    "Java",
+    "C#",
+    "Go",
+    "Ruby",
+    "PHP",
+    "Node.js",
+    "Kotlin",
+    "Scala",
+    "Rust",
+    "Perl",
+    "Elixir",
+    "Clojure",
+    "JavaScript (ES6+)",
+    "TypeScript",
+    "Swift",
+    "Objective-C",
+    "Dart (Flutter)",
+    "SQL (ANSI SQL)",
+    "PL/SQL (Oracle)",
+    "T-SQL (SQL Server)",
+    "NoSQL Query Languages (MongoDB Query Language, Cassandra Query Language)",
+    "GraphQL",
+    "Bash Scripting",
+    "PowerShell",
+    "VBA",
+    "JSON",
+    "XML",
+    "YAML",
+    "TOML",
+    "Amazon Web Services (AWS)",
+    "Microsoft Azure",
+    "Google Cloud Platform (GCP)",
+    "Alibaba Cloud",
+    "Oracle Cloud Infrastructure (OCI)",
+    "RESTful APIs",
+    "SOAP APIs",
+    "WebSockets",
+    "gRPC",
+    "Kafka",
+    "RabbitMQ",
+    "Redis Pub/Sub",
+    "OAuth",
+    "SAML",
+    "OpenID Connect",
+    "GitHub Actions",
+    "GitLab CI/CD",
+    "Jenkins",
+    "Travis CI",
+    "CircleCI",
+    "Azure DevOps Pipelines",
+    "AWS CodePipeline",
+    "Prometheus",
+    "Grafana",
+    "ELK Stack (Elasticsearch, Logstash, Kibana)",
+    "Splunk",
+    "Datadog",
+    "New Relic",
+    "Nagios",
+    "Zabbix",
+    "AWS Lambda",
+    "Azure Functions",
+    "Google Cloud Functions",
+    "Docker",
+    "Kubernetes",
+    "AWS ECS",
+    "AWS EKS",
+    "Azure Kubernetes Service (AKS)",
+    "Google Kubernetes Engine (GKE)",
+    "GitHub",
+    "GitLab",
+    "Bitbucket",
+    "Azure Repos",
+    "AWS IAM",
+    "Azure Active Directory",
+    "Google Cloud IAM",
+    "Apache Kafka",
+    "RabbitMQ",
+    "Amazon SQS",
+    "Azure Service Bus",
+    "Google Cloud Pub/Sub",
+  ],
+  tools: [
+    "VS Code",
+    "IntelliJ IDEA",
+    "Eclipse",
+    "PyCharm",
+    "WebStorm",
+    "Vim",
+    "Emacs",
+    "Sublime Text",
+    "Android Studio",
+    "Xcode",
+    "Visual Studio",
+    "Git",
+    "SVN",
+    "Mercurial",
+    "Maven",
+    "Gradle",
+    "NPM",
+    "Yarn",
+    "Webpack",
+    "Rollup",
+    "Parcel",
+    "Gulp",
+    "Grunt",
+    "Bazel",
+    "Jest",
+    "Mocha",
+    "Chai",
+    "Jasmine",
+    "Cypress",
+    "Selenium",
+    "Playwright",
+    "JUnit",
+    "NUnit",
+    "Pytest",
+    "Postman (API Testing)",
+    "SoapUI",
+    "JMeter",
+    "LoadRunner",
+    "Docker Desktop",
+    "Kubernetes CLI (kubectl)",
+    "Minikube",
+    "Vagrant",
+    "VirtualBox",
+    "VMware Workstation/ESXi",
+    "Ansible",
+    "Terraform",
+    "Puppet",
+    "Chef",
+    "SaltStack",
+    "Argo CD",
+    "Flux CD",
+    "DBeaver",
+    "SQL Developer",
+    "MySQL Workbench",
+    "pgAdmin",
+    "MongoDB Compass",
+    "Robo 3T",
+    "Wireshark",
+    "Nmap",
+    "Postman (network requests)",
+    "cURL",
+    "ping",
+    "traceroute",
+    "iPerf",
+    "Jira",
+    "Confluence",
+    "Trello",
+    "Asana",
+    "Slack",
+    "Microsoft Teams",
+    "Zoom",
+    "Miro",
+    "Figma",
+    "Sketch",
+    "Adobe XD",
+    "OWASP ZAP",
+    "Burp Suite",
+    "Nessus",
+    "Metasploit",
+    "Snort",
+    "Suricata",
+    "Jupyter Notebook",
+    "Google Colab",
+    "Anaconda",
+    "TensorFlow",
+    "Keras",
+    "PyTorch",
+    "Scikit-learn",
+    "Pandas",
+    "NumPy",
+    "Matplotlib",
+    "Seaborn",
+    "OpenTelemetry",
+    "Zipkin",
+    "Jaeger",
+    "Loki",
+    "Thanos",
+    "ESLint",
+    "Prettier",
+    "SonarQube",
+    "Black (Python)",
+    "Flake8",
+    "iTerm2",
+    "Terminator",
+    "Windows Terminal",
+    "Zsh",
+    "Oh My Zsh",
+    "Tmux",
+  ],
+  skills: [
+    // Kỹ năng lập trình & Phát triển
+    "Object-Oriented Programming (OOP)",
+    "Functional Programming (FP)",
+    "Data Structures & Algorithms",
+    "Design Patterns",
+    "Clean Code Principles",
+    "Refactoring",
+    "Test-Driven Development (TDD)",
+    "Behavior-Driven Development (BDD)",
+    "Domain-Driven Design (DDD)",
+    "Agile Methodologies (Scrum, Kanban)",
+    "Debugging",
+    "Code Review",
+    "Version Control Management",
+    // Kỹ năng kiến trúc & Hệ thống
+    "System Design",
+    "Microservices Architecture",
+    "Monolithic Architecture",
+    "Serverless Architecture",
+    "Event-Driven Architecture",
+    "API Design",
+    "Scalability",
+    "High Availability",
+    "Resilience",
+    "Security Best Practices",
+    "Performance Optimization",
+    "Cloud Architecture",
+    "Distributed Systems",
+    // Kỹ năng DevOps & Operations
+    "CI/CD Implementation",
+    "Infrastructure as Code (IaC)",
+    "Container Orchestration",
+    "Monitoring & Alerting",
+    "Logging & Tracing",
+    "Configuration Management",
+    "Site Reliability Engineering (SRE) Principles",
+    "Disaster Recovery",
+    "Backup Strategies",
+    // Kỹ năng cơ sở dữ liệu
+    "Database Design",
+    "SQL Optimization",
+    "Data Modeling",
+    "Database Administration (DBA)",
+    "NoSQL Database Management",
+    // Kỹ năng mạng
+    "Networking Fundamentals (TCP/IP, HTTP/S)",
+    "DNS",
+    "Load Balancing",
+    "Firewall Configuration",
+    "VPNs",
+    "Network Security",
+    // Kỹ năng bảo mật
+    "Cybersecurity Principles",
+    "Vulnerability Assessment",
+    "Penetration Testing",
+    "Threat Modeling",
+    "Incident Response",
+    "Cryptography",
+    "Identity & Access Management (IAM)",
+    // Kỹ năng mềm
+    "Problem Solving",
+    "Critical Thinking",
+    "Communication (Verbal & Written)",
+    "Teamwork",
+    "Collaboration",
+    "Adaptability",
+    "Time Management",
+    "Project Management",
+    "Mentoring",
+    "Documentation",
+    "Research Skills",
+    "Presentation Skills",
+    // Kỹ năng khác
+    "Data Analysis",
+    "Machine Learning Fundamentals",
+    "Deep Learning Fundamentals",
+    "Statistical Analysis",
+    "Cloud Cost Optimization",
+    "Virtualization",
+    "Operating System Fundamentals",
+    "Command Line Interface (CLI) Proficiency",
+  ],
+  OS: [
+    "Linux (Ubuntu, CentOS, Fedora, Debian, Red Hat Enterprise Linux - RHEL, Alpine Linux)",
+    "Windows Server",
+    "Windows Desktop (Windows 10, Windows 11)",
+    "macOS",
+    "Unix",
+    "iOS",
+    "Android",
+    "FreeBSD",
+    "VxWorks (Embedded OS)",
+  ],
+  DB: [
+    "MySQL",
+    "PostgreSQL",
+    "Oracle Database",
+    "Microsoft SQL Server",
+    "SQLite",
+    "MariaDB",
+    "IBM Db2",
+    "MongoDB (Document)",
+    "Cassandra (Column-family)",
+    "Redis (Key-value)",
+    "Elasticsearch (Search engine/Document)",
+    "DynamoDB (Key-value/Document)",
+    "Couchbase (Document)",
+    "Neo4j (Graph)",
+    "ArangoDB (Multi-model)",
+    "InfluxDB (Time-series)",
+    "RavenDB (Document)",
+    "Snowflake",
+    "Google BigQuery",
+    "Amazon Redshift",
+    "Teradata",
+    "SAP HANA",
+    "Redis",
+    "Memcached",
+    "Amazon RDS",
+    "Azure SQL Database",
+    "Google Cloud SQL",
+    "Cosmos DB",
+    "Aurora",
+  ],
+  network: [
+    "Servers (Rack, Blade, Tower)",
+    "Storage Area Network (SAN)",
+    "Network Attached Storage (NAS)",
+    "Direct-Attached Storage (DAS)",
+    "RAID configurations",
+    "Solid State Drives (SSDs)",
+    "Hard Disk Drives (HDDs)",
+    "GPUs (for ML/AI)",
+    "CPUs (Intel, AMD)",
+    "RAM",
+    "Motherboards",
+    "Power Supply Units (PSUs)",
+    "UPS (Uninterruptible Power Supply)",
+    "KVM Switches",
+    "Routers",
+    "Switches (Layer 2, Layer 3)",
+    "Firewalls (Hardware/Software)",
+    "Load Balancers (Hardware/Software)",
+    "Access Points (APs)",
+    "Modems",
+    "Network Interface Cards (NICs)",
+    "Cables (Ethernet, Fiber Optic)",
+    "Patch Panels",
+    "Rack Units",
+    "TCP/IP Suite (IPv4, IPv6)",
+    "HTTP/S",
+    "DNS",
+    "DHCP",
+    "FTP/SFTP",
+    "SSH",
+    "Telnet",
+    "SMTP",
+    "POP3",
+    "IMAP",
+    "SNMP",
+    "VLANs",
+    "VPNs (IPSec, OpenVPN, SSL VPN)",
+    "OSI Model",
+    "TCP/UDP",
+    "Routing Protocols (BGP, OSPF, EIGRP, RIP)",
+    "Switching Protocols (STP, VLAN Trunking)",
+    "Network Topologies (Star, Mesh, Bus, Ring)",
+    "Subnetting",
+    "Network Latency",
+    "Bandwidth",
+    "Virtual Machines (VMs)",
+    "Containers",
+    "Virtual Private Clouds (VPCs)",
+    "Elastic Load Balancers (ELBs)",
+    "Content Delivery Networks (CDNs)",
+    "Edge Locations",
+    "Availability Zones",
+    "Regions",
+    "Direct Connect/ExpressRoute",
+    "Intrusion Detection Systems (IDS)",
+    "Intrusion Prevention Systems (IPS)",
+    "Unified Threat Management (UTM) devices",
+    "Hardware Security Modules (HSMs)",
+    "IoT Devices",
+    "Embedded Systems",
+    "Raspberry Pi",
+    "Arduino",
+  ],
+};
+function Random(array) {
+  var final = array[Math.floor(Math.random() * array.length)];
+  return final;
+}
 function RandomString(
   len,
   chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
@@ -942,15 +1398,13 @@ async function textbox(page) {
 }
 async function textbox2(page) {
   await page.waitForTimeout(3000);
-  const inputElements = await page
-    .locator('//div[@id="content"]//input')
-    .elementHandles();
-  await console.log(inputElements.length);
+  const inputElements = await page.$$("input, textarea");
   for (let i = 0; i < inputElements.length; i++) {
     try {
       await inputElements[i].click({ timeout: 1000 });
-      await page.waitForTimeout(1000);
-      await inputElements[i].fill(RandomString(10), { timeout: 1000 });
+      await page.waitForTimeout(2000);
+      await inputElements[i].fill(Random(array["skills"]), { timeout: 1000 });
+      // await page.keyboard.press("Enter");
     } catch (error) {}
   }
 }
@@ -961,6 +1415,24 @@ async function select(page, index) {
   for (let i = 0; i < select.length; i++) {
     try {
       await select[i].selectOption({ index: index }, { timeout: 1000 });
+    } catch (error) {}
+  }
+}
+async function select2(page) {
+  await page.waitForTimeout(3000);
+  const select = await page.$$("select");
+  for (let i = 0; i < select.length; i++) {
+    try {
+      const secondSelectOptions = await page
+        .locator("select")
+        .nth(i)
+        .locator("option")
+        .count();
+      await select[i].selectOption(
+        { index: Math.floor(Math.random() * (secondSelectOptions - 1)) + 1 },
+        { timeout: 3000 }
+      );
+      await page.waitForTimeout(1000);
     } catch (error) {}
   }
 }
@@ -2202,6 +2674,60 @@ async function chatgpt_create_content2() {
     await create_sent("dự án", i);
   }
 }
+async function gemini() {
+  const browser = await chromium.launch({
+    headless: false,
+    channel: "chrome",
+    slowMo: 100,
+  });
+
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  await page.goto("https://gemini.google.com");
+  await page.waitForTimeout(5000);
+  let personnel = fs.readFileSync("personnel.txt", "utf-8");
+  let project = fs.readFileSync("project.txt", "utf-8");
+  async function create_sent(type) {
+    await page.locator("rich-textarea p").fill(`${type}`);
+    await page.locator(".send-button-icon").click();
+    await page.waitForTimeout(20000);
+    const number = await page.$$("message-content");
+    const text = await page
+      .locator("message-content")
+      .nth(number.length - 1)
+      .innerText();
+    const titleMatch = text.match(/件名\s*(.+)/);
+    const title = titleMatch ? titleMatch[1].trim() : "Không tìm thấy tiêu đề";
+    const content =
+      text.split(/件名.*\n/)[1]?.trim() || "Không tìm thấy nội dung";
+    const mail_have = "dimot111111@gmail.com";
+    if (type == `${personnel}`) {
+      const infor_per = await mail_infor2(content);
+      const infor = infor_per.name_per + RandomNumber(3);
+      await create_fileExcel(`${infor}`);
+      await sentmail_file(
+        `${title + RandomNumber(3)}`,
+        `${content}`,
+        `${infor}.xlsx`,
+        mail_have
+      );
+    } else {
+      const infor_project = await mail_infor2(content);
+      const infor = infor_project.name_project + RandomNumber(3);
+      await create_fileExcel(`${infor}`);
+      await sentmail_file(
+        `${title + RandomNumber(3)}`,
+        `${content}`,
+        `${infor}.xlsx`,
+        mail_have
+      );
+    }
+  }
+  for (let i = 0; i < 4; i++) {
+    await create_sent(`${personnel}`);
+    await create_sent(`${project}`);
+  }
+}
 async function fun_sent_data() {
   const chatgpt_contentmail = await chatgpt_create_content();
   //Env : Product
@@ -2286,8 +2812,8 @@ async function run_all(page, expect) {
   */
 }
 async function fun_sentMail_daily(page, expect) {
-  await chatgpt_create_content2();
-
+  // await chatgpt_create_content2();
+  await gemini();
   await ver2_add_personnel_self(page);
   await add_skill_sheet(page);
   await ver2_add_project_self(page);
@@ -2471,11 +2997,68 @@ async function check_file(
 }
 async function run_fun(page, expect) {
   try {
+    // await ver2_add_personnel_self(page, expect);
+    // await add_skill_sheet(page, expect);
+    // await direct_personnel_self(page, expect);
+    // await sent_mail_self(page, expect);
     await click_menu(page, expect);
   } catch (error) {
     console.log(error);
     await sentmail_error(page, `${error}`, `${error}`);
   }
+}
+async function Test_add_personnel_self(page, expect) {
+  await goto(page, "personnel-self/add");
+  await textbox2(page);
+  await page.locator("#phone").fill(RandomNumber(10));
+  await page
+    .locator("#email")
+    .fill("email" + RandomName() + RandomNumber(10) + "@gmail.com");
+  await page
+    .locator("#preferred_project")
+    .fill("Hope Case " + RandomName() + RandomNumber(3));
+  await page.locator("#note").fill("Note " + RandomName() + RandomNumber(3));
+  await page
+    .locator('input[name="tags"]')
+    .first()
+    .fill("TagDi " + RandomName() + RandomNumber(3));
+  await page.waitForTimeout(1000);
+  await page.locator('input[name="tags"]').first().press("Enter");
+  await page.waitForTimeout(5000);
+  await page.locator("#btn_update").click();
+  for (let i = 0; i < 10; i++) {
+    await page.locator("#position-phase-search").click();
+    await page.waitForTimeout(1000);
+    await page
+      .locator(".tt-selectable")
+      .nth(Math.floor(Math.random() * 50))
+      .click();
+  }
+  await page.locator(".btn-select-skills").click();
+  for (let i = 0; i < 10; i++) {
+    await page
+      .locator("#tab-言語・サービス input")
+      .nth(Math.floor(Math.random() * 244))
+      .click();
+    await page.waitForTimeout(1000);
+  }
+  await page.locator(".choose-skills").click();
+  await page.waitForTimeout(1000);
+  await select2(page);
+  await page
+    .locator("#min_salary")
+    .fill(`${Math.floor(Math.random() * 4) + 1}0000`);
+  await page
+    .locator("#max_salary")
+    .fill(`${Math.floor(Math.random() * (10 - 5 + 1)) + 5}0000`);
+  await page
+    .locator("#zipcode")
+    .fill(`1${Math.floor(Math.random() * 10) + 1}00000`);
+  await page.waitForTimeout(1000);
+  await page.locator("#zipcode").press("0");
+  await page.waitForTimeout(1000);
+
+  await page.waitForTimeout(5000);
 }
 async function tooltip(page, expect) {
   await page.waitForTimeout(3000);
@@ -2582,6 +3165,8 @@ async function check_sent_mail_detail(page, expect, mail_sent) {
   }
 
   console.log(areArraysEqual(mail_sent, mail_web), url2);
+  await page1.waitForTimeout(3000);
+  await page1.close();
 }
 async function check_sent_mail_detail_2(params) {
   const infor0 = await sent_mail_self(page);
@@ -3029,6 +3614,24 @@ async function mail_infor(text) {
   const patterns = {
     name_per: /氏名[:：\s]+([^\n]+)/,
     name_project: /【プロジェクト名】\s*(.+)/,
+    age: /年齢[:：\s]+(\d+)歳/,
+    gender: /性別[:：\s]+([^\n]+)/,
+    salary: /希望単金[:：\s]+月額(\d+)万円〜/,
+    mail: /MAIL[:：\s]+([^\n]+)/,
+  };
+  const name_per = text.match(patterns.name_per)?.[1]?.trim() || "N/A";
+  const name_project = text.match(patterns.name_project)?.[1]?.trim() || "N/A";
+  const age = text.match(patterns.age)?.[1] || "N/A";
+  const mail = text.match(patterns.mail)?.[1]?.trim() || "N/A";
+  const salary = text.match(patterns.salary)?.[1]
+    ? `${text.match(patterns.salary)[1]}万円`
+    : "N/A";
+  return { name_per, name_project, age, salary, mail };
+}
+async function mail_infor2(text) {
+  const patterns = {
+    name_per: /氏名[:：\s]+([^\n]+)/,
+    name_project: /プロジェクト名:\s*(.+)/,
     age: /年齢[:：\s]+(\d+)歳/,
     gender: /性別[:：\s]+([^\n]+)/,
     salary: /希望単金[:：\s]+月額(\d+)万円〜/,
@@ -3692,4 +4295,5 @@ module.exports = {
   material_add,
   check_class,
   sentmail_error,
+  ver2_add_personnel_self,
 };
