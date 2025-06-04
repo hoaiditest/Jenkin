@@ -452,48 +452,10 @@ async function direct_personnel_self(page) {
 }
 
 async function sent(page, template) {
-  await page.locator("#select2-dp_id-container").click();
-  await page.waitForTimeout(5000);
-  await page.locator("#select2-dp_id-container").press("Enter");
-  await page.waitForTimeout(3000);
-  while (
-    !(await page.isVisible("#personnel_info_2")) &&
-    !(await page.isVisible("#project_info_2"))
-  ) {
-    console.log("Chưa thấy Personnel/Project, nhấn lại nút...");
-    await page.locator("#select2-dp_id-container").click();
-    await page.waitForTimeout(3000);
-    await page.locator("#select2-dp_id-container").press("Enter");
-    await page.waitForTimeout(3000);
-  }
+  await groupPer_Pro(page);
   await page.locator("#select_temp").selectOption(template);
   await template_selectOption(page);
-  while (
-    (await page.locator("#box-attachment span:nth-child(1)").count()) < 14
-  ) {
-    console.log("Chưa thấy File, Upload lại...");
-    await page.locator("#box-attachment").click();
-    const fileChooserPromise = page.waitForEvent("filechooser");
-    await page.locator("#upload-file").click();
-    const fileChooser = await fileChooserPromise;
-    await fileChooser.setFiles([
-      "file/file_new/自社案件情報(1).pdf",
-      "file/file_new/自社案件情報(1).xlsx",
-      "file/file_new/自社案件情報(2).pdf",
-      "file/file_new/自社案件情報(2).xlsx",
-      "file/file_new/自社案件情報(3).pdf",
-      "file/file_new/自社案件情報(3).xlsx",
-      "file/file_new/自社案件情報(4).xlsx",
-      "file/file_new/自社要員情報(1).pdf",
-      "file/file_new/自社要員情報(1).xlsx",
-      "file/file_new/自社要員情報(2).pdf",
-      "file/file_new/自社要員情報(2).xlsx",
-      "file/file_new/自社要員情報(3).pdf",
-      "file/file_new/自社要員情報(3).xlsx",
-      "file/file_new/自社要員情報(4).xlsx",
-    ]);
-    await page.waitForTimeout(20000);
-  }
+  await FileUpload(page);
   let web_info_per;
   try {
     web_info_per = await page
@@ -528,6 +490,15 @@ async function sent(page, template) {
   await page.waitForTimeout(10000);
   return { web_info_per, file, mail_sent };
 }
+async function gr_mail(page) {
+  await page.waitForTimeout(3000);
+  await fun_click(page, "#btn_choose_direct_mail", 0);
+  await page.waitForTimeout(1000);
+  await fun_click(page, ".btn-add-row", 0);
+  await page.waitForTimeout(1000);
+  await fun_click(page, "#btn_save", 0);
+  await page.waitForTimeout(3000);
+}
 async function sent_personnel_individual(page) {
   await goto(page, "sent-mail-individual");
   await page.locator("#mail_to").fill("hoaiditest@gmail.com");
@@ -542,16 +513,23 @@ async function sent_personnel_individual_self(page) {
   const infor = await sent(page, "sent_personnel_individual_self");
   return { web_info_per: infor.web_info_per, file: infor.file };
 }
+async function sent_project_individual_self(page) {
+  await goto(page, "sent-project-individual/sent-self");
+  await page.locator("#mail_to").fill("hoaiditest@gmail.com");
+  await page.locator("#content").click();
+  const infor = await sent(page, "sent_project_individual_self");
+  return { web_info_per: infor.web_info_per, file: infor.file };
+}
+async function sent_project_individual(page) {
+  await goto(page, "sent-project-individual");
+  await page.locator("#mail_to").fill("hoaiditest@gmail.com");
+  await page.locator("#content").click();
+  const infor = await sent(page, "sent_project_individual");
+  return { web_info_per: infor.web_info_per, file: infor.file };
+}
 async function sent_mail_self(page) {
   await goto(page, "sent-mail/sent-self");
-  await page.locator("#btn_choose_direct_mail").click();
-  await page.locator(".btn-add-row").nth(0).click();
-  try {
-    await page.locator("#btn_save").click({ timeout: 5000 });
-  } catch (error) {
-    await page.locator(".noty_close_button").click();
-    await page.locator("#btn_save").click();
-  }
+  await gr_mail(page);
   const infor = await sent(page, "sent_mail_self");
   return {
     web_info_per: infor.web_info_per,
@@ -561,20 +539,180 @@ async function sent_mail_self(page) {
 }
 async function sent_mail(page) {
   await goto(page, "sent-mail/sent");
-  await page.locator("#btn_choose_direct_mail").click();
-  await page.locator(".btn-add-row").nth(0).click();
-  try {
-    await page.locator("#btn_save").click({ timeout: 5000 });
-  } catch (error) {
-    await page.locator(".noty_close_button").click();
-    await page.locator("#btn_save").click();
-  }
+  await gr_mail(page);
   const infor = await sent(page, "sent_mail");
   return {
     web_info_per: infor.web_info_per,
     file: infor.file,
     mail_sent: infor.mail_sent,
   };
+}
+async function sent_mail_project_self(page) {
+  await goto(page, "sent-mail-project/sent-self");
+  await gr_mail(page);
+  const infor = await sent(page, "sent_mail_project_self");
+  return {
+    web_info_per: infor.web_info_per,
+    file: infor.file,
+    mail_sent: infor.mail_sent,
+  };
+}
+async function sent_mail_project(page) {
+  await goto(page, "sent-mail-project/sent");
+  await gr_mail(page);
+  const infor = await sent(page, "sent_mail_project");
+  return {
+    web_info_per: infor.web_info_per,
+    file: infor.file,
+    mail_sent: infor.mail_sent,
+  };
+}
+async function outbox(page, url1, url2, template) {
+  await goto(page, url1);
+  await gr_mail(page);
+  await page.locator("#select2-dp_id-container").click();
+  await page.waitForTimeout(2000);
+  await page.locator("#select2-dp_id-container").press("Enter");
+  await page.locator("#select_temp").selectOption(template);
+  await template_selectOption(page);
+  await page.locator("#box-attachment").click();
+  const fileChooserPromise = page.waitForEvent("filechooser");
+  await page.locator("#upload-file").click();
+  const fileChooser = await fileChooserPromise;
+  await fileChooser.setFiles([
+    "file/file_new/自社案件情報(1).pdf",
+    "file/file_new/自社案件情報(1).xlsx",
+    "file/file_new/自社案件情報(2).pdf",
+    "file/file_new/自社案件情報(2).xlsx",
+    "file/file_new/自社案件情報(3).pdf",
+    "file/file_new/自社案件情報(3).xlsx",
+    "file/file_new/自社案件情報(4).xlsx",
+    "file/file_new/自社要員情報(1).pdf",
+    "file/file_new/自社要員情報(1).xlsx",
+    "file/file_new/自社要員情報(2).pdf",
+    "file/file_new/自社要員情報(2).xlsx",
+    "file/file_new/自社要員情報(3).pdf",
+    "file/file_new/自社要員情報(3).xlsx",
+    "file/file_new/自社要員情報(4).xlsx",
+  ]);
+  await page.waitForTimeout(10000);
+  let web_info_per;
+  try {
+    web_info_per = await page
+      .locator("#personnel_info_1")
+      .textContent({ timeout: 5000 });
+  } catch (error) {
+    web_info_per = await page.locator("#project_info_1").textContent();
+  }
+  const file = await page.locator("#box-attachment span:nth-child(1)").count();
+  await page.locator(".btn_save_outbox").nth(0).click();
+  await page.waitForTimeout(3000);
+  await goto(page, url2);
+  await page.waitForTimeout(3000);
+  await page.locator(".ph-pencil-simple-line").first().click();
+  await page.waitForTimeout(3000);
+  await page.locator(".btn_confirm").first().click();
+  await page.waitForTimeout(3000);
+  await page.locator("#send").click();
+  await page.waitForTimeout(5000);
+  await page.locator(".swal-button--confirm").click();
+  await page.waitForTimeout(5000);
+  await page.locator(".swal-button--confirm").click();
+  await page.waitForTimeout(20000);
+  return { web_info_per, file };
+}
+async function sent_mail_interaction(page) {
+  await goto(page, "sent-mail-interaction");
+  await page
+    .locator("#subject_content")
+    .fill(`sent_mail_interaction ${new Date().toLocaleString()}`);
+  await page.locator("#body_detail_text_content").click();
+  await page
+    .locator("#body_detail_text_content")
+    .fill(`sent_mail_interaction ${new Date().toLocaleString()}`);
+  await interaction_fillMail_file(page);
+  await interaction_sent(page);
+}
+async function sent_mail_interaction_template(page) {
+  await goto(page, "sent-mail-interaction");
+  await page.locator("#type_template").click();
+  await page
+    .locator("#select_temp")
+    .selectOption("sent_mail_interaction_template");
+  await template_selectOption(page);
+  await interaction_fillMail_file(page);
+  await interaction_sent(page);
+}
+async function outbox_interaction(page) {
+  await goto(page, "sent-mail-interaction");
+  await page
+    .locator("#subject_content")
+    .fill(`outbox_interaction ${new Date().toLocaleString()}`);
+  await page.locator("#body_detail_text_content").click();
+  await page
+    .locator("#body_detail_text_content")
+    .fill(`outbox_interaction ${new Date().toLocaleString()}`);
+  await interaction_fillMail_file(page);
+  await page.locator(".btn-save-outbox").nth(0).click();
+  await page.locator(".ph-pencil-simple-line").nth(0).click();
+  await interaction_sent(page);
+  await goto(page, "sent-mail-interaction");
+  await page.locator("#type_template").click();
+  await page.locator("#select_temp").selectOption("outbox_interaction");
+  await template_selectOption(page);
+  await interaction_fillMail_file(page);
+  await page.locator(".btn-save-outbox").nth(0).click();
+  await page.locator(".ph-pencil-simple-line").nth(0).click();
+  await interaction_sent(page);
+}
+async function reply_interaction(page) {
+  await goto(page, "");
+  await page.waitForTimeout(3000);
+  await page.locator(".ph-envelope-simple").first().click();
+  await page.waitForTimeout(3000);
+  await page.locator(".nav-group-sub>li").first().click();
+  await page.locator("tbody>tr").first().click();
+  await page.locator("#mail-detail a").nth(1).click();
+  const page1 = await page.waitForEvent("popup");
+  await page1
+    .locator("#body_detail_text_content")
+    .fill(`reply_interaction ${new Date().toLocaleString()}`);
+  await interaction_fillMail_file(page1);
+  await interaction_sent(page1);
+  await page1.close();
+  await page.locator("#mail-detail a").nth(1).click();
+  const page2 = await page.waitForEvent("popup");
+  await page2.locator("#type_template").click();
+  await page2.locator("#select_temp").selectOption("reply_interaction");
+  await template_selectOption(page2);
+  await interaction_fillMail_file(page2);
+  await interaction_sent(page2);
+  await page2.close();
+  await page.locator("#mail-detail a").nth(1).click();
+  const page3 = await page.waitForEvent("popup");
+  await page3.locator("#proposal_email").click();
+  /*for (let i = 0; i < 5; i++) {
+    await add_data(page3, i);
+  }*/
+  await page3.locator("#self_personal").nth(0).click();
+  for (let i = 0; i < 1; i++) {
+    await add_data(page3, i);
+  }
+  await page3
+    .locator("#content_proposal_email_select_temp")
+    .selectOption("reply_interaction");
+  await template_selectOption(page3);
+  await interaction_fillMail_file(page3);
+  await interaction_sent(page3);
+  async function add_data(page, i) {
+    await page.locator(".btn-md").nth(0).click();
+    await page.waitForTimeout(1000);
+    await page.locator("#btn_search").click();
+    await page.waitForTimeout(1000);
+    await page.locator(".btn-add-row").nth(i).click();
+    await page.waitForTimeout(1000);
+    await page.locator("#box-result a").nth(0).click();
+  }
 }
 async function delete_all_page(page, url_delete) {
   await page.goto(url_delete);
@@ -1411,25 +1549,6 @@ async function check_status(page, url) {
     await sentmail_errorJP(page, url, `Status Code: ${response.status()}`, [
       "hoaiditest1@gmail.com",
     ]);
-    for (;;) {
-      await page.reload();
-      await page.waitForTimeout(10000);
-      const response2 = await page.request.get(page.url());
-      if (response2.status() != 200) {
-        console.log(response2.status() + url);
-        await sentmail_errorJP(
-          page,
-          url,
-          `Status Code: ${response2.status()}`,
-          ["hoaiditest1@gmail.com"]
-        );
-        // await page.goBack();
-        console.log("Check status again");
-        await page.waitForTimeout(600000);
-      } else {
-        break;
-      }
-    }
   }
 }
 async function check_noty_error(page, url) {
@@ -1443,19 +1562,6 @@ async function check_noty_error(page, url) {
     const text = await noty.textContent();
     console.log("noty_error " + url + "  " + text);
     await sentmail_errorJP(page, url, `Alert Error : ${text} `);
-    for (;;) {
-      await page.reload();
-      await page.waitForTimeout(10000);
-      const check_noty2 = await noty.isVisible();
-      if (check_noty2) {
-        await console.log("noty_error " + url + "  " + text);
-        await sentmail_errorJP(page, url, `Alert Error : ${text} `);
-        console.log("Check Notification again");
-        await page.waitForTimeout(600000);
-      } else {
-        break;
-      }
-    }
   }
 }
 async function click_breadcrumb(page) {
@@ -2071,99 +2177,6 @@ async function template_selectOption(page) {
     }
   }
 }
-async function sent_mail_interaction(page) {
-  await goto(page, "sent-mail-interaction");
-  await page
-    .locator("#subject_content")
-    .fill(`sent_mail_interaction ${new Date().toLocaleString()}`);
-  await page.locator("#body_detail_text_content").click();
-  await page
-    .locator("#body_detail_text_content")
-    .fill(`sent_mail_interaction ${new Date().toLocaleString()}`);
-  await interaction_fillMail_file(page);
-  await interaction_sent(page);
-}
-async function sent_mail_interaction_template(page) {
-  await goto(page, "sent-mail-interaction");
-  await page.locator("#type_template").click();
-  await page
-    .locator("#select_temp")
-    .selectOption("sent_mail_interaction_template");
-  await template_selectOption(page);
-  await interaction_fillMail_file(page);
-  await interaction_sent(page);
-}
-async function outbox_interaction(page) {
-  await goto(page, "sent-mail-interaction");
-  await page
-    .locator("#subject_content")
-    .fill(`outbox_interaction ${new Date().toLocaleString()}`);
-  await page.locator("#body_detail_text_content").click();
-  await page
-    .locator("#body_detail_text_content")
-    .fill(`outbox_interaction ${new Date().toLocaleString()}`);
-  await interaction_fillMail_file(page);
-  await page.locator(".btn-save-outbox").nth(0).click();
-  await page.locator(".ph-pencil-simple-line").nth(0).click();
-  await interaction_sent(page);
-  await goto(page, "sent-mail-interaction");
-  await page.locator("#type_template").click();
-  await page.locator("#select_temp").selectOption("outbox_interaction");
-  await template_selectOption(page);
-  await interaction_fillMail_file(page);
-  await page.locator(".btn-save-outbox").nth(0).click();
-  await page.locator(".ph-pencil-simple-line").nth(0).click();
-  await interaction_sent(page);
-}
-async function reply_interaction(page) {
-  await goto(page, "");
-  await page.waitForTimeout(3000);
-  await page.locator(".ph-envelope-simple").first().click();
-  await page.waitForTimeout(3000);
-  await page.locator(".nav-group-sub>li").first().click();
-  await page.locator("tbody>tr").first().click();
-  await page.locator("#mail-detail a").nth(1).click();
-  const page1 = await page.waitForEvent("popup");
-  await page1
-    .locator("#body_detail_text_content")
-    .fill(`reply_interaction ${new Date().toLocaleString()}`);
-  await interaction_fillMail_file(page1);
-  await interaction_sent(page1);
-  await page1.close();
-  await page.locator("#mail-detail a").nth(1).click();
-  const page2 = await page.waitForEvent("popup");
-  await page2.locator("#type_template").click();
-  await page2.locator("#select_temp").selectOption("reply_interaction");
-  await template_selectOption(page2);
-  await interaction_fillMail_file(page2);
-  await interaction_sent(page2);
-  await page2.close();
-  await page.locator("#mail-detail a").nth(1).click();
-  const page3 = await page.waitForEvent("popup");
-  await page3.locator("#proposal_email").click();
-  /*for (let i = 0; i < 5; i++) {
-    await add_data(page3, i);
-  }*/
-  await page3.locator("#self_personal").nth(0).click();
-  for (let i = 0; i < 1; i++) {
-    await add_data(page3, i);
-  }
-  await page3
-    .locator("#content_proposal_email_select_temp")
-    .selectOption("reply_interaction");
-  await template_selectOption(page3);
-  await interaction_fillMail_file(page3);
-  await interaction_sent(page3);
-  async function add_data(page, i) {
-    await page.locator(".btn-md").nth(0).click();
-    await page.waitForTimeout(1000);
-    await page.locator("#btn_search").click();
-    await page.waitForTimeout(1000);
-    await page.locator(".btn-add-row").nth(i).click();
-    await page.waitForTimeout(1000);
-    await page.locator("#box-result a").nth(0).click();
-  }
-}
 async function add_project_self(page) {
   await goto(page, "project-self/add");
   await page.waitForTimeout(3000);
@@ -2245,54 +2258,6 @@ async function direct_project(page) {
   await page.locator('//label[@for="14_day"]').click({ timeout: 3000 });
   await page.locator("#btn_search").click();
   await add_group(page, `${formattedDate} direct_project`);
-}
-async function sent_project_individual_self(page) {
-  await goto(page, "sent-project-individual/sent-self");
-  await page.locator("#mail_to").fill("hoaiditest@gmail.com");
-  await page.locator("#content").click();
-  const infor = await sent(page, "sent_project_individual_self");
-  return { web_info_per: infor.web_info_per, file: infor.file };
-}
-async function sent_project_individual(page) {
-  await goto(page, "sent-project-individual");
-  await page.locator("#mail_to").fill("hoaiditest@gmail.com");
-  await page.locator("#content").click();
-  const infor = await sent(page, "sent_project_individual");
-  return { web_info_per: infor.web_info_per, file: infor.file };
-}
-async function sent_mail_project_self(page) {
-  await goto(page, "sent-mail-project/sent-self");
-  await page.locator("#btn_choose_direct_mail").click();
-  await page.locator(".btn-add-row").nth(0).click();
-  try {
-    await page.locator("#btn_save").click({ timeout: 5000 });
-  } catch (error) {
-    await page.locator(".noty_close_button").click();
-    await page.locator("#btn_save").click();
-  }
-  const infor = await sent(page, "sent_mail_project_self");
-  return {
-    web_info_per: infor.web_info_per,
-    file: infor.file,
-    mail_sent: infor.mail_sent,
-  };
-}
-async function sent_mail_project(page) {
-  await goto(page, "sent-mail-project/sent");
-  await page.locator("#btn_choose_direct_mail").click();
-  await page.locator(".btn-add-row").nth(0).click();
-  try {
-    await page.locator("#btn_save").click({ timeout: 5000 });
-  } catch (error) {
-    await page.locator(".noty_close_button").click();
-    await page.locator("#btn_save").click();
-  }
-  const infor = await sent(page, "sent_mail_project");
-  return {
-    web_info_per: infor.web_info_per,
-    file: infor.file,
-    mail_sent: infor.mail_sent,
-  };
 }
 const { chromium, firefox, webkit } = require("playwright");
 async function content_mail() {
@@ -2942,6 +2907,103 @@ async function run_fun(page, expect) {
   } catch (error) {
     console.log(error);
     await sentmail_error(page, `${error}`, `${error}`);
+  }
+}
+async function FileUpload(page) {
+  const timeout = 240000;
+  const startTime = Date.now();
+  while (Date.now() - startTime < timeout) {
+    try {
+      if (
+        (await page.locator("#box-attachment span:nth-child(1)").count()) < 14
+      ) {
+        // console.log("Chưa thấy File, Upload lại...");
+        await page.locator("#box-attachment").click();
+        const fileChooserPromise = page.waitForEvent("filechooser");
+        await page.locator("#upload-file").click();
+        const fileChooser = await fileChooserPromise;
+        await fileChooser.setFiles([
+          "file/file_new/自社案件情報(1).pdf",
+          "file/file_new/自社案件情報(1).xlsx",
+          "file/file_new/自社案件情報(2).pdf",
+          "file/file_new/自社案件情報(2).xlsx",
+          "file/file_new/自社案件情報(3).pdf",
+          "file/file_new/自社案件情報(3).xlsx",
+          "file/file_new/自社案件情報(4).xlsx",
+          "file/file_new/自社要員情報(1).pdf",
+          "file/file_new/自社要員情報(1).xlsx",
+          "file/file_new/自社要員情報(2).pdf",
+          "file/file_new/自社要員情報(2).xlsx",
+          "file/file_new/自社要員情報(3).pdf",
+          "file/file_new/自社要員情報(3).xlsx",
+          "file/file_new/自社要員情報(4).xlsx",
+        ]);
+        await page.waitForTimeout(20000);
+      } else {
+        break;
+      }
+    } catch (e) {
+      console.log(`${e} Bug and Retry...`);
+      await page.waitForTimeout(3000);
+    }
+  }
+  if ((await page.locator("#box-attachment span:nth-child(1)").count()) < 14) {
+    throw new Error(` BUG`);
+  }
+}
+async function groupPer_Pro(page) {
+  await page.waitForTimeout(3000);
+  const timeout = 120000;
+  const startTime = Date.now();
+  let isVisible_Per = false;
+  let isVisible_Pro = false;
+  while (Date.now() - startTime < timeout) {
+    try {
+      isVisible_Per = await page.isVisible("#personnel_info_2");
+      isVisible_Pro = await page.isVisible("#project_info_2");
+      if (isVisible_Per || isVisible_Pro) {
+        break;
+      } else {
+        // console.log("Chưa thấy Personnel/Project, nhấn lại nút...");
+        await page.waitForTimeout(3000);
+        await page.locator("#select2-dp_id-container").click();
+        await page.waitForTimeout(3000);
+        await page.locator("#select2-dp_id-container").press("Enter");
+        await page.waitForTimeout(3000);
+      }
+    } catch (e) {
+      console.log(`${e} Bug and Retry...`);
+      await page.waitForTimeout(3000);
+    }
+  }
+  if (!isVisible_Per && !isVisible_Pro) {
+    throw new Error(` BUG`);
+  }
+}
+async function fun_click(page, element, nth) {
+  await page.waitForTimeout(3000);
+  const timeout = 120000;
+  const startTime = Date.now();
+  let isVisible = false;
+  while (Date.now() - startTime < timeout) {
+    try {
+      isVisible = await page.locator(`${element}`).nth(nth).isVisible();
+      if (isVisible) {
+        await page.locator(`${element}`).nth(nth).click();
+        // console.log(`Click ${element}`);
+        break;
+      } else {
+        console.log(`${element} Retry...`);
+        await page.waitForTimeout(3000);
+      }
+    } catch (e) {
+      console.log(`${element} Bug and Retry...`);
+      await page.waitForTimeout(3000);
+    }
+  }
+  if (!isVisible) {
+    console.log(`${element} BUG`);
+    throw new Error(`${element} BUG`);
   }
 }
 async function Test_add_personnel_self(page, expect) {
@@ -3983,62 +4045,6 @@ async function bp_sale_edit(page) {
   } else {
     throw new Error("Không thay đổi sau khi edit ");
   }
-}
-async function outbox(page, url1, url2, template) {
-  await goto(page, url1);
-  await page.locator("#btn_choose_direct_mail").click();
-  await page.locator(".btn-add-row").nth(0).click();
-  await page.locator("#btn_save").click();
-  await page.locator("#select2-dp_id-container").click();
-  await page.waitForTimeout(2000);
-  await page.locator("#select2-dp_id-container").press("Enter");
-  await page.locator("#select_temp").selectOption(template);
-  await template_selectOption(page);
-  await page.locator("#box-attachment").click();
-  const fileChooserPromise = page.waitForEvent("filechooser");
-  await page.locator("#upload-file").click();
-  const fileChooser = await fileChooserPromise;
-  await fileChooser.setFiles([
-    "file/file_new/自社案件情報(1).pdf",
-    "file/file_new/自社案件情報(1).xlsx",
-    "file/file_new/自社案件情報(2).pdf",
-    "file/file_new/自社案件情報(2).xlsx",
-    "file/file_new/自社案件情報(3).pdf",
-    "file/file_new/自社案件情報(3).xlsx",
-    "file/file_new/自社案件情報(4).xlsx",
-    "file/file_new/自社要員情報(1).pdf",
-    "file/file_new/自社要員情報(1).xlsx",
-    "file/file_new/自社要員情報(2).pdf",
-    "file/file_new/自社要員情報(2).xlsx",
-    "file/file_new/自社要員情報(3).pdf",
-    "file/file_new/自社要員情報(3).xlsx",
-    "file/file_new/自社要員情報(4).xlsx",
-  ]);
-  await page.waitForTimeout(10000);
-  let web_info_per;
-  try {
-    web_info_per = await page
-      .locator("#personnel_info_1")
-      .textContent({ timeout: 5000 });
-  } catch (error) {
-    web_info_per = await page.locator("#project_info_1").textContent();
-  }
-  const file = await page.locator("#box-attachment span:nth-child(1)").count();
-  await page.locator(".btn_save_outbox").nth(0).click();
-  await page.waitForTimeout(3000);
-  await goto(page, url2);
-  await page.waitForTimeout(3000);
-  await page.locator(".ph-pencil-simple-line").first().click();
-  await page.waitForTimeout(3000);
-  await page.locator(".btn_confirm").first().click();
-  await page.waitForTimeout(3000);
-  await page.locator("#send").click();
-  await page.waitForTimeout(5000);
-  await page.locator(".swal-button--confirm").click();
-  await page.waitForTimeout(5000);
-  await page.locator(".swal-button--confirm").click();
-  await page.waitForTimeout(20000);
-  return { web_info_per, file };
 }
 async function check_list(page) {
   await page.goto("https://www.customer.engibase.com/bp");
