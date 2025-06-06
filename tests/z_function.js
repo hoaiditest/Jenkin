@@ -17,19 +17,34 @@ const company_test_025 = {
   email: "nesv025@gmail.com",
   pw: "Duywasd123",
 };
+const ver2_company_product_025 = {
+  url: "https://company.engibase.com/",
+  email: "nesv025@gmail.com",
+  pw: "Duywasd123",
+};
 const ver2_visitor_test_dimot111111 = {
   url: "https://visitor.test.engibase.com/",
+  email: "dimot111111@learningift.com",
+  pw: "Duywasd123",
+};
+const ver2_visitor_test_025 = {
+  url: "https://visitor.test.engibase.com/",
+  email: "nesv025@learningift.com",
+  pw: "Duywasd123",
+};
+const ver2_visitor_product_hoaiditest = {
+  url: "https://visitor.engibase.com/",
+  email: "hoaiditest@learningift.com",
+  pw: "Duywasd123",
+};
+const ver2_visitor_product_dimot111111 = {
+  url: "https://visitor.engibase.com/",
   email: "dimot111111@learningift.com",
   pw: "Duywasd123",
 };
 const ver2_visitor_product_025 = {
   url: "https://visitor.engibase.com/",
   email: "nesv025@learningift.com",
-  pw: "Duywasd123",
-};
-const ver2_company_product_025 = {
-  url: "https://company.engibase.com/",
-  email: "nesv025@gmail.com",
   pw: "Duywasd123",
 };
 const ver2_visitor_check_service = {
@@ -336,6 +351,23 @@ async function ver2_add_personnel_self(page) {
     .locator("#intv_start")
     .selectOption({ index: Math.floor(Math.random() * intv_start) });
   await page.waitForTimeout(1000);
+  for (let i = 0; i < 10; i++) {
+    await page.locator("#position-phase-search").click();
+    await page.waitForTimeout(1000);
+    await page
+      .locator(".tt-selectable")
+      .nth(Math.floor(Math.random() * 50))
+      .click();
+  }
+  await page.waitForTimeout(1000);
+  const position = await page.locator(".position_phase_required").count();
+  for (let i = 0; i < position; i++) {
+    await page
+      .locator(".position_phase_required")
+      .nth(i)
+      .selectOption({ index: Math.floor(Math.random() * 11) + 1 });
+  }
+  await page.locator("#status_publish").click();
   await page.locator("#btn_update").click();
   await page.waitForTimeout(5000);
 }
@@ -666,11 +698,7 @@ async function outbox_interaction(page) {
   await interaction_sent(page);
 }
 async function reply_interaction(page) {
-  await goto(page, "");
-  await page.waitForTimeout(3000);
-  await page.locator(".ph-envelope-simple").first().click();
-  await page.waitForTimeout(3000);
-  await page.locator(".nav-group-sub>li").first().click();
+  await goto(page, "mail/inbox/12");
   await page.locator("tbody>tr").first().click();
   await page.locator("#mail-detail a").nth(1).click();
   const page1 = await page.waitForEvent("popup");
@@ -2782,7 +2810,7 @@ async function fun_sent_mail(page, expect) {
   await sent_mail_interaction(page);
   await sent_mail_interaction_template(page);
   await outbox_interaction(page);
-  await reply_interaction(page);
+  // await reply_interaction(page);
   return {
     sent0,
     sent1,
@@ -4160,9 +4188,12 @@ module.exports = {
   Test_manager,
   Product_manager,
   company_test_025,
-  ver2_visitor_test_dimot111111,
   ver2_company_product_025,
+  ver2_visitor_test_dimot111111,
+  ver2_visitor_test_025,
+  ver2_visitor_product_hoaiditest,
   ver2_visitor_product_025,
+  ver2_visitor_product_dimot111111,
   ver2_visitor_check_service,
   login,
   login_all,
