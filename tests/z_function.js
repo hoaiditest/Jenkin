@@ -487,6 +487,7 @@ async function sent(page, template) {
   await groupPer_Pro(page);
   await page.locator("#select_temp").selectOption(template);
   await template_selectOption(page);
+  await page.locator("#subject_content").press(RandomNumber(1));
   await FileUpload(page);
   let web_info_per;
   try {
