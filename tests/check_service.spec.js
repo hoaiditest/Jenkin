@@ -101,13 +101,13 @@ test("Engibase ", async ({ page }) => {
     await sentmail_error(page, `${error}`, `${error}`);
   }
   console.log(
-    `[${new Date().toLocaleString()}] Start Check_Engibase timeZone VN\n`
+    `[${new Date().toLocaleString()}] End Check_Engibase timeZone VN\n`
   );
 });
 
 test("Check_lastFetch ", async ({ page }) => {
   console.log(
-    `[${new Date().toLocaleString()}] End Check_lastFetch timeZone VN\n`
+    `[${new Date().toLocaleString()}] Start Check_lastFetch timeZone VN\n`
   );
   test.setTimeout(3600000);
   try {
@@ -122,5 +122,7 @@ test("Check_lastFetch ", async ({ page }) => {
   } catch (error) {
     await sentmail_error(page, `${error}`, `${error}`);
   }
-  console.log(`[${new Date().toLocaleString()}] End timeZone VN\n`);
+  console.log(
+    `[${new Date().toLocaleString()}] End Check_lastFetch timeZone VN\n`
+  );
 });
