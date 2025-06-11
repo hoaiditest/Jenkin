@@ -13,6 +13,7 @@ const { chromium } = require("playwright");
 
 test("Check vps", async ({}) => {
   test.setTimeout(240000);
+  await page.setViewportSize({ width: 1920, height: 1080 });
   console.log(`[${new Date().toLocaleString()}] Start Check_VPS timeZone VN\n`);
   try {
     let link = [
