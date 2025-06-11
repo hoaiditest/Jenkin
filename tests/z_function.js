@@ -3044,12 +3044,12 @@ async function FileUpload(page) {
         break;
       }
     } catch (e) {
-      console.log(`${e} Bug and Retry...`);
+      console.log(`${e} Bug and Retry FileUpload...`);
       await page.waitForTimeout(3000);
     }
   }
   if ((await page.locator("#box-attachment span:nth-child(1)").count()) < 14) {
-    throw new Error(` BUG`);
+    throw new Error(` BUG FileUpload`);
   }
 }
 async function groupPer_Pro(page) {
@@ -3073,12 +3073,12 @@ async function groupPer_Pro(page) {
         await page.waitForTimeout(3000);
       }
     } catch (e) {
-      console.log(`${e} Bug and Retry...`);
+      console.log(`${e} Bug and Retry groupPer_Pro...`);
       await page.waitForTimeout(3000);
     }
   }
   if (!isVisible_Per && !isVisible_Pro) {
-    throw new Error(` BUG`);
+    throw new Error(` BUG groupPer_Pro`);
   }
 }
 async function fun_click(page, element, nth) {
@@ -3094,17 +3094,17 @@ async function fun_click(page, element, nth) {
         // console.log(`Click ${element}`);
         break;
       } else {
-        console.log(`${element} Retry...`);
+        console.log(`${element} Retry Click ...`);
         await page.waitForTimeout(3000);
       }
     } catch (e) {
-      console.log(`${element} Bug and Retry...`);
+      console.log(`${element} Bug and Retry Click...`);
       await page.waitForTimeout(3000);
     }
   }
   if (!isVisible) {
-    console.log(`${element} BUG`);
-    throw new Error(`${element} BUG`);
+    console.log(`${element} BUG Click`);
+    throw new Error(`${element} BUG Click`);
   }
 }
 async function Test_add_personnel_self(page, expect) {
