@@ -1,6 +1,11 @@
 const ExcelJS = require("exceljs");
 const fs = require("fs");
 const path = require("path");
+const dayjs = require("dayjs");
+const utc = require("dayjs/plugin/utc");
+const timezone = require("dayjs/plugin/timezone");
+dayjs.extend(utc);
+dayjs.extend(timezone);
 const Product_manager = {
   url: "https://manager.engibase.com/",
   email: "nesv025@gmail.com",
@@ -2938,6 +2943,73 @@ async function run_fun(page, expect) {
     await sentmail_error(page, `${error}`, `${error}`);
   }
 }
+async function Check_Warning(page, expect) {
+  await page.goto("https://manager.test.engibase.com/mail-account");
+  // Kiểm tra xem phần tử với class 'btn-warning' có hiển thị hay không
+  const btnWarning = await page.$(".btn-warning");
+  if (btnWarning) {
+    const isVisible = await btnWarning.isVisible();
+    if (isVisible) {
+      console.log("Nút cảnh báo đang hiển thị, sẽ nhấn nút Reset.");
+
+      // Nhấn nút reset - giả sử nó có text "Reset" hoặc id/class riêng
+      await page.locator("#breadcrumb_elements a").nth(0).click();
+    } else {
+      console.log("Nút cảnh báo tồn tại nhưng không hiển thị.");
+    }
+  } else {
+    console.log("Không tìm thấy phần tử có class btn-warning.");
+  }
+}
+async function Check_lastFetch(page, expect) {
+  await page.goto("https://manager.test.engibase.com/mail-account");
+
+  // Tìm dòng chứa cả email và ID chính xác
+  const rowLocator = page
+    .locator("table tbody tr", {
+      has: page.locator("td", { hasText: "request01@learningift.com" }),
+    })
+    .filter({
+      has: page.locator("td", { hasText: "bqHaudvfa9Yk2rNpXd9" }),
+    });
+
+  // Tìm cột "Last fetch at" trong hàng đó (cột thứ 4 - đếm từ 1)
+  const lastFetchText = await rowLocator.locator("td").nth(3).innerText();
+
+  // Tách dòng chứa "Last fetch:" (nếu cần tách riêng)
+  const lastFetchLine = lastFetchText
+    .split("\n")
+    .find((line) => line.includes("Last fetch:"));
+  // Tách thời gian dạng chuỗi
+  const lastFetchTimeStr = lastFetchLine.replace("Last fetch: ", "").trim();
+
+  const lastFetchTime = dayjs(lastFetchTimeStr);
+
+  // Lấy thời gian hiện tại theo múi giờ Nhật Bản (Asia/Tokyo)
+  const nowJapanStr = new Date().toLocaleString("ja-JP", {
+    timeZone: "Asia/Tokyo",
+  });
+  const nowJapan = dayjs(nowJapanStr);
+
+  const diffMinutes = nowJapan.diff(lastFetchTime, "minute");
+
+  if (diffMinutes >= 0 && diffMinutes < 5) {
+  // if (diffMinutes < 0) {
+    console.log("🟢 Last fetch CÁCH thời gian hiện tại (Nhật Bản) dưới 5 phút");
+    console.log("Last fetch: ", lastFetchTime.format("YYYY-MM-DD HH:mm:ss"));
+    console.log("Japan now: ", nowJapan.format("YYYY-MM-DD HH:mm:ss"));
+    console.log("Chênh lệch: ", diffMinutes, "phút");
+  } else {
+    console.log(
+      "⚠️ Last fetch KHÔNG nằm trong khoảng 5 phút gần nhất với thời gian Nhật Bản"
+    );
+    console.log("Last fetch: ", lastFetchTime.format("YYYY-MM-DD HH:mm:ss"));
+    console.log("Japan now: ", nowJapan.format("YYYY-MM-DD HH:mm:ss"));
+    console.log("Chênh lệch: ", diffMinutes, "phút");
+    await page.locator("#breadcrumb_elements a").nth(0).click();
+    await page.waitForTimeout(5000);
+  }
+}
 async function FileUpload(page) {
   const timeout = 240000;
   const startTime = Date.now();
@@ -4260,4 +4332,5 @@ module.exports = {
   sentmail_error,
   sentmail_errorJP,
   ver2_add_personnel_self,
+  Check_lastFetch,
 };
