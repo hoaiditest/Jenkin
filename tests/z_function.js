@@ -1564,7 +1564,7 @@ async function click_menu(page) {
       const url1 = await page.url();
       await page.waitForTimeout(1000);
       await menu[a].click({ timeout: 240000 });
-      console.log(menu[a]);
+      // console.log(menu[a]);
       await page.waitForTimeout(1000);
       const url2 = await page.url();
       await check_status(page, url2);

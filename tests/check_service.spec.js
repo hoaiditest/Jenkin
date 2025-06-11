@@ -13,38 +13,47 @@ const { chromium } = require("playwright");
 
 test("Check vps", async ({}) => {
   test.setTimeout(240000);
-  let link = [
-    "https://mta.engibase.com/haproxy?stats",
-    "https://pcw.v1.engibase.com/haproxy?stats",
-  ];
-  for (let i = 0; i < link.length; i++) {
-    const browser = await chromium.launch();
-    const context = await browser.newContext({
-      httpCredentials: {
-        username: "nesv006",
-        password: "Jilv120312",
-      },
-    });
-    const page = await context.newPage();
-    await page.goto(link[i]);
-    const url = await page.url();
-    const di = await check_class(page);
-    if (di.length > 0) {
-      await sentmail_error(
-        page,
-        `active_down  : ${new Date().toLocaleString()}`,
-        `active_down  : ${new Date().toLocaleString()} : \n
+  console.log(`[${new Date().toLocaleString()}] Start Check_VPS timeZone VN\n`);
+  try {
+    let link = [
+      "https://mta.engibase.com/haproxy?stats",
+      "https://pcw.v1.engibase.com/haproxy?stats",
+    ];
+    for (let i = 0; i < link.length; i++) {
+      const browser = await chromium.launch();
+      const context = await browser.newContext({
+        httpCredentials: {
+          username: "nesv006",
+          password: "Jilv120312",
+        },
+      });
+      const page = await context.newPage();
+      await page.goto(link[i]);
+      const url = await page.url();
+      const di = await check_class(page);
+      if (di.length > 0) {
+        await sentmail_error(
+          page,
+          `active_down  : ${new Date().toLocaleString()}`,
+          `active_down  : ${new Date().toLocaleString()} : \n
       ${di} \n
       url : ${url}\n
       ID: nesv006 \n
       PW: Jilv120312 \n`
-      );
+        );
+      }
+      await browser.close();
     }
-    await browser.close();
+  } catch (error) {
+    await sentmail_error(page, `${error}`, `${error}`);
   }
+  console.log(`[${new Date().toLocaleString()}] End Check_VPS timeZone VN\n`);
 });
 test("Jpsic ", async ({ page }) => {
   test.setTimeout(300000);
+  console.log(
+    `[${new Date().toLocaleString()}] Start Check_Jpsic timeZone VN\n`
+  );
   const link = [
     "https://test.jpsic.co.jp/",
     "https://jpsic.co.jp/",
@@ -71,10 +80,14 @@ test("Jpsic ", async ({ page }) => {
       );
     }
   }
+  console.log(`[${new Date().toLocaleString()}] End Check_Jpsic timeZone VN\n`);
 });
 
 test("Engibase ", async ({ page }) => {
   test.setTimeout(3600000);
+  console.log(
+    `[${new Date().toLocaleString()}] Start Check_Engibase timeZone VN\n`
+  );
   try {
     /*login*/
     await login_all(
@@ -87,9 +100,15 @@ test("Engibase ", async ({ page }) => {
   } catch (error) {
     await sentmail_error(page, `${error}`, `${error}`);
   }
+  console.log(
+    `[${new Date().toLocaleString()}] Start Check_Engibase timeZone VN\n`
+  );
 });
 
 test("Check_lastFetch ", async ({ page }) => {
+  console.log(
+    `[${new Date().toLocaleString()}] End Check_lastFetch timeZone VN\n`
+  );
   test.setTimeout(3600000);
   try {
     /*login*/
@@ -103,4 +122,5 @@ test("Check_lastFetch ", async ({ page }) => {
   } catch (error) {
     await sentmail_error(page, `${error}`, `${error}`);
   }
+  console.log(`[${new Date().toLocaleString()}] End timeZone VN\n`);
 });
