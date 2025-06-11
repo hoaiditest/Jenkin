@@ -11,9 +11,8 @@ import {
 } from "./z_function";
 const { chromium } = require("playwright");
 
-test("Check vps", async ({}) => {
+test("Check_VPS", async ({}) => {
   test.setTimeout(240000);
-  await page.setViewportSize({ width: 1920, height: 1080 });
   console.log(`[${new Date().toLocaleString()}] Start Check_VPS timeZone VN\n`);
   try {
     let link = [
@@ -29,6 +28,7 @@ test("Check vps", async ({}) => {
         },
       });
       const page = await context.newPage();
+      await page.setViewportSize({ width: 1920, height: 1080 });
       await page.goto(link[i]);
       const url = await page.url();
       const di = await check_class(page);
