@@ -96,7 +96,7 @@ test("Check_lastFetch ", async ({ page }) => {
     await login_all(
       page,
       "https://manager.test.engibase.com/mail-account",
-      "nesv025@gmail.com",
+      "checklastfetch@gmail.com",
       "Duywasd123"
     );
     await Check_lastFetch(page, expect);

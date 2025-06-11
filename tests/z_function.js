@@ -2994,7 +2994,7 @@ async function Check_lastFetch(page, expect) {
   const diffMinutes = nowJapan.diff(lastFetchTime, "minute");
 
   if (diffMinutes >= 0 && diffMinutes < 5) {
-  // if (diffMinutes < 0) {
+    // if (diffMinutes < 0) {
     console.log("🟢 Last fetch CÁCH thời gian hiện tại (Nhật Bản) dưới 5 phút");
     console.log("Last fetch: ", lastFetchTime.format("YYYY-MM-DD HH:mm:ss"));
     console.log("Japan now: ", nowJapan.format("YYYY-MM-DD HH:mm:ss"));
