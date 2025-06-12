@@ -11,7 +11,7 @@ import {
 } from "./z_function";
 const { chromium } = require("playwright");
 
-/*test("Check_VPS", async ({}) => {
+test("Check_VPS", async ({}) => {
   test.setTimeout(240000);
   console.log(`[${new Date().toLocaleString()}] Start Check_VPS timeZone VN\n`);
   try {
@@ -49,7 +49,7 @@ const { chromium } = require("playwright");
     await sentmail_error(page, `${error}`, `${error}`);
   }
   console.log(`[${new Date().toLocaleString()}] End Check_VPS timeZone VN\n`);
-});*/
+});
 test("Jpsic ", async ({ page }) => {
   test.setTimeout(300000);
   console.log(
