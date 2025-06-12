@@ -3000,14 +3000,22 @@ async function Check_lastFetch(page, expect) {
     console.log("Japan now: ", nowJapan.format("YYYY-MM-DD HH:mm:ss"));
     console.log("Chênh lệch: ", diffMinutes, "phút");
   } else {
-    console.log(
-      "⚠️ Last fetch KHÔNG nằm trong khoảng 5 phút gần nhất với thời gian Nhật Bản"
-    );
+    console.log("⚠️ Last fetch KHÔNG nằm trong khoảng 5 phút");
     console.log("Last fetch: ", lastFetchTime.format("YYYY-MM-DD HH:mm:ss"));
     console.log("Japan now: ", nowJapan.format("YYYY-MM-DD HH:mm:ss"));
     console.log("Chênh lệch: ", diffMinutes, "phút");
+    console.log("Đã nhấn nút キャッシュ削除");
     await page.locator("#breadcrumb_elements a").nth(0).click();
     await page.waitForTimeout(5000);
+    await sentmail_error(
+      page,
+      `⚠️ Last fetch KHÔNG nằm trong khoảng 5 phút ${new Date().toLocaleString()}⚠️`,
+      `⚠️ Last fetch KHÔNG nằm trong khoảng 5 phút ${new Date().toLocaleString()}⚠️
+Last fetch: ${lastFetchTime.format("YYYY-MM-DD HH:mm:ss")}
+Japan now: ${nowJapan.format("YYYY-MM-DD HH:mm:ss")}
+Chênh lệch: ${diffMinutes} phút
+Đã nhấn nút キャッシュ削除 `
+    );
   }
 }
 async function FileUpload(page) {
