@@ -3009,11 +3009,10 @@ async function Check_lastFetch(page, expect) {
     await page.waitForTimeout(5000);
     await sentmail_error(
       page,
-      `⚠️ Last fetch KHÔNG nằm trong khoảng 5 phút ${new Date().toLocaleString()}⚠️`,
-      `⚠️ Last fetch KHÔNG nằm trong khoảng 5 phút ${new Date().toLocaleString()}⚠️
+      `⚠️ ${new Date().toLocaleString()} Last fetch Chênh lệch: ${diffMinutes} phút ⚠️`,
+      `⚠️ ${new Date().toLocaleString()} Last fetch Chênh lệch: ${diffMinutes} phút ⚠️
 Last fetch: ${lastFetchTime.format("YYYY-MM-DD HH:mm:ss")}
-Japan now: ${nowJapan.format("YYYY-MM-DD HH:mm:ss")}
-Chênh lệch: ${diffMinutes} phút
+Japan now: ${nowJapan.format("YYYY-MM-DD HH:mm:ss")} 
 Đã nhấn nút キャッシュ削除 `
     );
   }
