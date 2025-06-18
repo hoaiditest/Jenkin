@@ -3010,10 +3010,11 @@ async function Check_lastFetch(page, expect) {
     await sentmail_error(
       page,
       `⚠️ ${new Date().toLocaleString()} Last fetch Chênh lệch: ${diffMinutes} phút ⚠️`,
-      `⚠️ ${new Date().toLocaleString()} Last fetch Chênh lệch: ${diffMinutes} phút ⚠️
+      `${new Date().toLocaleString()} Last fetch Chênh lệch: ${diffMinutes} phút
 Last fetch: ${lastFetchTime.format("YYYY-MM-DD HH:mm:ss")}
 Japan now: ${nowJapan.format("YYYY-MM-DD HH:mm:ss")} 
-Đã nhấn nút キャッシュ削除 `
+Đã nhấn nút キャッシュ削除 
+https://manager.test.engibase.com/mail-account `
     );
   }
 }
