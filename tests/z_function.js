@@ -2963,7 +2963,8 @@ async function Check_Warning(page, expect) {
 }
 async function Check_lastFetch(page, expect) {
   await page.goto("https://manager.test.engibase.com/mail-account");
-
+  await page.setViewportSize({ width: 1920, height: 1080 });
+  await page.waitForTimeout(1000);
   // Tìm dòng chứa cả email và ID chính xác
   const rowLocator = page
     .locator("table tbody tr", {
