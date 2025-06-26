@@ -439,6 +439,7 @@ async function search_bp(page) {
     "trungsantrungsan",
     "di1999test",
     "hoaiditest",
+    "nesv025",
     "hoangoisan@gmail.com",
     "hoangoisan2@gmail.com",
   ];
@@ -2269,7 +2270,14 @@ async function ver2_add_project_self(page) {
     .fill("Work style " + RandomName() + RandomNumber(3));
   await page.locator("#range_of_price").click();
   await page.locator("#settlement_range").click();
-  await page.locator("#memo").fill("Memo " + RandomName() + RandomNumber(3));
+  await page
+    .locator("#memo_title-1")
+    .fill("Memo " + RandomName() + RandomNumber(3));
+  await page
+    .locator("#memo_content-1")
+    .fill("Memo " + RandomName() + RandomNumber(3));
+  await page.locator("#public").click();
+  // await page.locator("#shared").click();
   await page
     .locator('input[name="tags"]')
     .first()
