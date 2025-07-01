@@ -327,6 +327,7 @@ async function ver2_add_personnel_self(page) {
     .selectOption({ index: Math.floor(Math.random() * (station - 1)) + 1 });
   await page.waitForTimeout(1000);
   await page.locator(".btn-select-skills").click();
+  await page.waitForTimeout(5000);
   for (let i = 0; i < 10; i++) {
     await page
       .locator("#tab-言語・サービス input")
@@ -2619,15 +2620,18 @@ async function chatgpt_create_content2() {
   }
 }
 async function gemini() {
-  const browser = await chromium.launch({
+  /*const browser = await chromium.launch({
     headless: false,
     channel: "chrome",
     slowMo: 100,
+  });*/
+  const browser = await chromium.launch({
+    headless: false,
+    args: ["--disable-blink-features=AutomationControlled"],
   });
-
   const context = await browser.newContext();
   const page = await context.newPage();
-  await page.goto("https://gemini.google.com");
+  await page.goto("https://gemini.google.com/app?hl=vi");
   await page.waitForTimeout(5000);
   let personnel = fs.readFileSync("personnel.txt", "utf-8");
   let project = fs.readFileSync("project.txt", "utf-8");
