@@ -74,10 +74,21 @@ test("Jpsic ", async ({ page }) => {
     if (response.status() != 200) {
       await sentmail_error(
         page,
-        `Jpsic Env_Test Status khác 200 : ${new Date().toLocaleString()}`,
-        `${
-          link[i]
-        } \n Jpsic Env_Test Status khác 200 : ${new Date().toLocaleString()} \n`
+        `${link[i]} に問題が発生しています ${new Date().toLocaleString(
+          "ja-JP",
+          { timeZone: "Asia/Tokyo" }
+        )}`,
+        ` 
+${link[i]} で問題が発生しています。
+サポートをお願い致します。 
+お客様のテスト環境はシャットダウンされています。
+Status Code: ${response.status()}
+発生日時： ${new Date().toLocaleString("ja-JP", {
+          timeZone: "Asia/Tokyo",
+        })}(Asia/Tokyo)
+発生日時：${new Date().toLocaleString()} (VN)
+`,
+        ["h-inui@learningift.com"]
       );
     }
   }
