@@ -27,6 +27,11 @@ const ver2_company_product_025 = {
   email: "nesv025@gmail.com",
   pw: "Duywasd123",
 };
+const ver2_visitor_test_hoaiditest = {
+  url: "https://visitor.test.engibase.com/",
+  email: "hoaiditest@learningift.com",
+  pw: "Duywasd123",
+};
 const ver2_visitor_test_dimot111111 = {
   url: "https://visitor.test.engibase.com/",
   email: "dimot111111@learningift.com",
@@ -329,10 +334,20 @@ async function ver2_add_personnel_self(page) {
   await page.locator(".btn-select-skills").click();
   await page.waitForTimeout(5000);
   for (let i = 0; i < 10; i++) {
-    await page
-      .locator("#tab-言語・サービス input")
-      .nth(Math.floor(Math.random() * 244))
-      .click();
+    try {
+      await page
+        .locator("#tab-言語・サービス input")
+        .nth(Math.floor(Math.random() * 244))
+        .click({ timeout: 5000 });
+    } catch (error) {
+      console.log(
+        "Thay đổi ID từ #tab-言語・サービス input thành #tab-言語 input"
+      );
+      await page
+        .locator("#tab-言語 input")
+        .nth(Math.floor(Math.random() * 244))
+        .click();
+    }
     await page.waitForTimeout(1000);
   }
   await page.locator(".choose-skills").click();
@@ -3217,30 +3232,38 @@ async function check_mail(page, expect) {
     .textContent();
   console.log(time);
 }
-async function sent_mail_introduce(page, expect) {
-  await goto(page, "proposal-history");
-  await page.locator("tr .btn-info").nth(0).click();
-  const page1Promise = page.waitForEvent("popup");
-  const page1 = await page1Promise;
-  await page1.locator(".btn-warning").nth(0).click();
-  const page2Promise = page1.waitForEvent("popup");
-  const page2 = await page2Promise;
-  await page2.locator(".waves-effect").nth(0).click();
-  await page2.waitForTimeout(1000);
-  await page2.locator("#btn_search").click();
-  await page2.waitForTimeout(1000);
-  await page2.locator(".btn-add-row").nth(0).click();
-  await page2.waitForTimeout(1000);
-  await page2.locator(".btn-select-personal").nth(0).click();
-  await page2.locator(".token-input").nth(0).fill("nesv025@gmail.com");
-  await page2.locator(".token-input").nth(0).press("Enter");
-  await page2.waitForTimeout(1000);
-  await page2.locator(".btn_confirm").click();
-  await page2.locator(".btn_send").click();
-  await page2.waitForTimeout(1000);
-  await page2.locator(".swal-button--confirm").click();
-  await page2.waitForTimeout(1000);
-  await page2.locator(".swal-button--confirm").click();
+async function sent_mail_introduce(page, number_mail) {
+  for (let i = 0; i < number_mail; i++) {
+    await goto(page, "proposal-history");
+    await page.locator("tr .btn-info").nth(i).click();
+    const page1Promise = page.waitForEvent("popup");
+    const page1 = await page1Promise;
+    await page1.locator(".btn-warning").nth(0).click();
+    const page2Promise = page1.waitForEvent("popup");
+    const page2 = await page2Promise;
+    await page1.close();
+    await page2.locator(".waves-effect").nth(0).click();
+    await page2.waitForTimeout(3000);
+    await page2.locator("#btn_search").click();
+    await page2.waitForTimeout(3000);
+    await page2.locator(".btn-add-row").nth(0).click();
+    await page2.waitForTimeout(3000);
+    await page2.locator("#box-result .btn").nth(0).click();
+    await page2.waitForTimeout(3000);
+    await page2.locator(".token-input").nth(0).fill("nesv025@gmail.com");
+    await page2.waitForTimeout(3000);
+    await page2.locator(".token-input").nth(0).press("Enter");
+    await page2.waitForTimeout(3000);
+    await page2.locator(".btn_confirm").click();
+    await page2.waitForTimeout(3000);
+    await page2.locator(".btn_send").click();
+    await page2.waitForTimeout(3000);
+    await page2.locator(".swal-button--confirm").click();
+    await page2.waitForTimeout(3000);
+    await page2.locator(".swal-button--confirm").click();
+    await page2.waitForTimeout(5000);
+    await page2.close();
+  }
 }
 async function CheckTimeLoadPage(page, url) {
   await page.goto(url);
@@ -4283,6 +4306,7 @@ module.exports = {
   Product_manager,
   company_test_025,
   ver2_company_product_025,
+  ver2_visitor_test_hoaiditest,
   ver2_visitor_test_dimot111111,
   ver2_visitor_test_025,
   ver2_visitor_product_hoaiditest,
