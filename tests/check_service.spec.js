@@ -88,7 +88,7 @@ Status Code: ${response.status()}
         })}(Asia/Tokyo)
 発生日時：${new Date().toLocaleString()} (VN)
 `,
-        ["h-inui@learningift.com"]
+        ["h-inui@learningift.com", "nesv006@gmail.com"]
       );
     }
   }
