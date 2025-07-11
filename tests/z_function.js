@@ -403,15 +403,15 @@ async function add_skill_sheet(page) {
   await page.locator(".ph-plus-circle").nth(0).click();
   const page1Promise = page.waitForEvent("popup");
   const page1 = await page1Promise;
-  for (let i = 0; i < 2; i++) {
+  /*for (let i = 0; i < 2; i++) {
     await page1.locator(".ph-arrow-down").nth(0).click();
-  }
+  }*/
   await page1.waitForTimeout(3000);
-  const inputElements = await page1.$$("input, textarea");
+  const inputElements = await page1.$$("#adminForm input, textarea");
   for (let i = 0; i < inputElements.length; i++) {
     try {
-      await inputElements[i].click({ timeout: 1000 });
-      await page1.waitForTimeout(2000);
+      await inputElements[i].click({ timeout: 500 });
+      await page1.waitForTimeout(500);
       await inputElements[i].fill(Random(array["skills"]), { timeout: 1000 });
       await page1.keyboard.press("Enter");
     } catch (error) {}
@@ -432,9 +432,9 @@ async function add_skill_sheet(page) {
     } catch (error) {}
   }
   await page1.locator(".btn_save").click();
-  await page1.waitForTimeout(10000);
+  await page1.waitForTimeout(3000);
   await page1.close();
-  await console.log("add_skill_sheet thành công và đợi 10 giây ");
+  await console.log("add_skill_sheet OK ");
 }
 async function add_group(page, name) {
   await page.locator("#name").fill(name);
@@ -3246,7 +3246,7 @@ async function sent_mail_introduce(page, number_mail) {
     await page2.waitForTimeout(3000);
     await page2.locator("#btn_search").click();
     await page2.waitForTimeout(3000);
-    await page2.locator(".btn-add-row").nth(0).click();
+    await page2.locator(".btn-add-row").nth(i).click();
     await page2.waitForTimeout(3000);
     await page2.locator("#box-result .btn").nth(0).click();
     await page2.waitForTimeout(3000);
