@@ -40,7 +40,8 @@ test("Check_VPS", async ({}) => {
       ${di} \n
       url : ${url}\n
       ID: nesv006 \n
-      PW: Jilv120312 \n`
+      PW: Jilv120312 \n`,
+          ["nesv006@gmail.com"]
         );
       }
       await browser.close();
