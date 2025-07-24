@@ -678,13 +678,17 @@ async function outbox(page, url1, url2, template) {
 }
 async function sent_mail_interaction(page) {
   await goto(page, "sent-mail-interaction");
-  await page
-    .locator("#subject_content")
-    .fill(`sent_mail_interaction ${new Date().toLocaleString()}`);
+  await page.locator("#subject_content").fill(
+    `sent_mail_interaction ${new Date().toLocaleString("vi-VN", {
+      timeZone: "Asia/Ho_Chi_Minh",
+    })}`
+  );
   await page.locator("#body_detail_text_content").click();
-  await page
-    .locator("#body_detail_text_content")
-    .fill(`sent_mail_interaction ${new Date().toLocaleString()}`);
+  await page.locator("#body_detail_text_content").fill(
+    `sent_mail_interaction ${new Date().toLocaleString("vi-VN", {
+      timeZone: "Asia/Ho_Chi_Minh",
+    })}`
+  );
   await interaction_fillMail_file(page);
   await interaction_sent(page);
 }
@@ -700,13 +704,17 @@ async function sent_mail_interaction_template(page) {
 }
 async function outbox_interaction(page) {
   await goto(page, "sent-mail-interaction");
-  await page
-    .locator("#subject_content")
-    .fill(`outbox_interaction ${new Date().toLocaleString()}`);
+  await page.locator("#subject_content").fill(
+    `outbox_interaction ${new Date().toLocaleString("vi-VN", {
+      timeZone: "Asia/Ho_Chi_Minh",
+    })}`
+  );
   await page.locator("#body_detail_text_content").click();
-  await page
-    .locator("#body_detail_text_content")
-    .fill(`outbox_interaction ${new Date().toLocaleString()}`);
+  await page.locator("#body_detail_text_content").fill(
+    `outbox_interaction ${new Date().toLocaleString("vi-VN", {
+      timeZone: "Asia/Ho_Chi_Minh",
+    })}`
+  );
   await interaction_fillMail_file(page);
   await page.locator(".btn-save-outbox").nth(0).click();
   await page.locator(".ph-pencil-simple-line").nth(0).click();
@@ -725,9 +733,11 @@ async function reply_interaction(page) {
   await page.locator("tbody>tr").first().click();
   await page.locator("#mail-detail a").nth(1).click();
   const page1 = await page.waitForEvent("popup");
-  await page1
-    .locator("#body_detail_text_content")
-    .fill(`reply_interaction ${new Date().toLocaleString()}`);
+  await page1.locator("#body_detail_text_content").fill(
+    `reply_interaction ${new Date().toLocaleString("vi-VN", {
+      timeZone: "Asia/Ho_Chi_Minh",
+    })}`
+  );
   await interaction_fillMail_file(page1);
   await interaction_sent(page1);
   await page1.close();
@@ -2648,8 +2658,20 @@ async function gemini() {
   const page = await context.newPage();
   await page.goto("https://gemini.google.com/app?hl=vi");
   await page.waitForTimeout(5000);
-  let personnel = fs.readFileSync("personnel.txt", "utf-8");
-  let project = fs.readFileSync("project.txt", "utf-8");
+  let per = fs.readFileSync("file/gemini/personnel.txt", "utf-8");
+  let pro = fs.readFileSync("file/gemini/project.txt", "utf-8");
+  let personnel = fs.readFileSync("file/gemini/per.txt", "utf-8");
+  let project = fs.readFileSync("file/gemini/pro.txt", "utf-8");
+  await page.locator("rich-textarea p").fill(`${per}`);
+  await page.locator(".send-button-icon").click();
+  await page.waitForTimeout(10000);
+  await page.locator("rich-textarea p").fill(`${pro}`);
+  await page.locator(".send-button-icon").click();
+  await page.waitForTimeout(10000);
+  for (let i = 0; i < 10; i++) {
+    await create_sent(`${personnel}`);
+    await create_sent(`${project}`);
+  }
   async function create_sent(type) {
     await page.locator("rich-textarea p").fill(`${type}`);
     await page.locator(".send-button-icon").click();
@@ -2685,10 +2707,6 @@ async function gemini() {
         mail_have
       );
     }
-  }
-  for (let i = 0; i < 4; i++) {
-    await create_sent(`${personnel}`);
-    await create_sent(`${project}`);
   }
 }
 async function fun_sent_data() {
@@ -3037,8 +3055,12 @@ async function Check_lastFetch(page, expect) {
     await page.waitForTimeout(5000);
     await sentmail_error(
       page,
-      `⚠️ ${new Date().toLocaleString()} Last fetch Chênh lệch: ${diffMinutes} phút ⚠️`,
-      `${new Date().toLocaleString()} Last fetch Chênh lệch: ${diffMinutes} phút
+      `⚠️ ${new Date().toLocaleString("vi-VN", {
+        timeZone: "Asia/Ho_Chi_Minh",
+      })} Last fetch Chênh lệch: ${diffMinutes} phút ⚠️`,
+      `${new Date().toLocaleString("vi-VN", {
+        timeZone: "Asia/Ho_Chi_Minh",
+      })} Last fetch Chênh lệch: ${diffMinutes} phút
 Last fetch: ${lastFetchTime.format("YYYY-MM-DD HH:mm:ss")}
 Japan now: ${nowJapan.format("YYYY-MM-DD HH:mm:ss")} 
 Đã nhấn nút キャッシュ削除 
@@ -3276,7 +3298,9 @@ async function CheckTimeLoadPage(page, url) {
     console.log(
       `Thời gian tải trang: ${loadTime} ms  
 URL : ${url}  
-Thời gian : ${new Date().toLocaleString()}`
+Thời gian : ${new Date().toLocaleString("vi-VN", {
+        timeZone: "Asia/Ho_Chi_Minh",
+      })}`
     );
   }
 }
@@ -3355,7 +3379,9 @@ ${content}
 発生日時： ${new Date().toLocaleString("ja-JP", {
       timeZone: "Asia/Tokyo",
     })}(Asia/Tokyo)
-発生日時：${new Date().toLocaleString()} (VN)
+発生日時：${new Date().toLocaleString("vi-VN", {
+      timeZone: "Asia/Ho_Chi_Minh",
+    })} (VN)
 `,
     mail_error
   );
