@@ -111,7 +111,7 @@ test("Engibase ", async ({ page }) => {
     );
     await click_menu(page, expect);
   } catch (error) {
-    await sentmail_error(page, `${error}`, `${error}`);
+    await sentmail_error(page, `Check service ${error}`, `${error}`);
   }
   console.log(
     `[${new Date().toLocaleString()}] End Check_Engibase timeZone VN\n`
