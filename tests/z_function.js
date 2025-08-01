@@ -377,7 +377,7 @@ async function ver2_add_personnel_self(page) {
     await page.waitForTimeout(1000);
     await page
       .locator(".tt-selectable")
-      .nth(Math.floor(Math.random() * 50))
+      .nth(Math.floor(Math.random() * 14))
       .click();
   }
   await page.waitForTimeout(1000);
@@ -2646,12 +2646,12 @@ async function chatgpt_create_content2() {
 }
 async function gemini() {
   /*const browser = await chromium.launch({
-    headless: false,
+    headless: true,
     channel: "chrome",
     slowMo: 100,
   });*/
   const browser = await chromium.launch({
-    headless: false,
+    headless: true,
     args: ["--disable-blink-features=AutomationControlled"],
   });
   const context = await browser.newContext();
@@ -2987,6 +2987,25 @@ async function run_fun(page, expect) {
     console.log(error);
     await sentmail_error(page, `${error}`, `${error}`);
   }
+}
+async function createData_SentMail(page, expect) {
+  for (let i = 0; i < 10; i++) {
+    await ver2_add_personnel_self(page, expect);
+    await add_skill_sheet(page, expect);
+    await ver2_add_project_self(page, expect);
+  }
+  await direct_personnel_self(page, expect);
+  await direct_personnel(page, expect);
+  await direct_project(page, expect);
+  await direct_project_self(page, expect);
+  await sent_mail_self(page);
+  await sent_mail(page);
+  await sent_mail_project_self(page);
+  await sent_mail_project(page);
+  await sent_personnel_individual_self(page);
+  await sent_personnel_individual(page);
+  await sent_project_individual_self(page);
+  await sent_project_individual(page);
 }
 async function Check_Warning(page, expect) {
   await page.goto("https://manager.test.engibase.com/mail-account");
@@ -3848,7 +3867,8 @@ async function sentDone_getInfor(page) {
 }
 async function open_browser(mail) {
   const browser = await chromium.launch({
-    headless: false,
+    headless: true,
+    channel: "chrome",
     args: ["--disable-blink-features=AutomationControlled"],
   });
   const context = await browser.newContext();
