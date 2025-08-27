@@ -47,6 +47,11 @@ const ver2_visitor_product_hoaiditest = {
   email: "hoaiditest@learningift.com",
   pw: "Duywasd123",
 };
+const ver2_visitor_product_hoaiditestGmail = {
+  url: "https://visitor.engibase.com/",
+  email: "hoaiditest@gmail.com",
+  pw: "Duywasd123",
+};
 const ver2_visitor_product_dimot111111 = {
   url: "https://visitor.engibase.com/",
   email: "dimot111111@learningift.com",
@@ -2662,14 +2667,18 @@ async function gemini() {
   let pro = fs.readFileSync("file/gemini/project.txt", "utf-8");
   let personnel = fs.readFileSync("file/gemini/per.txt", "utf-8");
   let project = fs.readFileSync("file/gemini/pro.txt", "utf-8");
+  const mail_have = "dimot111111@gmail.com";
+  const number = 2;
   await page.locator("rich-textarea p").fill(`${per}`);
   await page.locator(".send-button-icon").click();
   await page.waitForTimeout(10000);
+  for (let i = 0; i < number; i++) {
+    await create_sent(`${personnel}`);
+  }
   await page.locator("rich-textarea p").fill(`${pro}`);
   await page.locator(".send-button-icon").click();
   await page.waitForTimeout(10000);
-  for (let i = 0; i < 10; i++) {
-    await create_sent(`${personnel}`);
+  for (let i = 0; i < number; i++) {
     await create_sent(`${project}`);
   }
   async function create_sent(type) {
@@ -2685,7 +2694,6 @@ async function gemini() {
     const title = titleMatch ? titleMatch[1].trim() : "Không tìm thấy tiêu đề";
     const content =
       text.split(/件名.*\n/)[1]?.trim() || "Không tìm thấy nội dung";
-    const mail_have = "dimot111111@gmail.com";
     if (type == `${personnel}`) {
       const infor_per = await mail_infor2(content);
       const infor = infor_per.name_per + RandomNumber(3);
@@ -2987,6 +2995,23 @@ async function run_fun(page, expect) {
     console.log(error);
     await sentmail_error(page, `${error}`, `${error}`);
   }
+}
+async function doda() {
+  const browser = await chromium.launch({
+    headless: false,
+    channel: "chrome",
+    args: ["--disable-blink-features=AutomationControlled"],
+  });
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  await page.goto("https://doda.jp/");
+  await page.locator(`button[type="button"]`).nth(4).click();
+  await page.locator(`#mailAddress`).fill(`hoaiditest@gmail.com`);
+  await page.locator(`#password`).fill("Duywasd123@");
+  await page.locator(`#cbAgreementSpanPC`).click();
+  // await page.locator(`#actionLogin_0`).click();
+
+  await page.waitForTimeout(100000);
 }
 async function createData_SentMail(page, expect) {
   for (let i = 0; i < 10; i++) {
@@ -4356,6 +4381,7 @@ module.exports = {
   ver2_visitor_test_dimot111111,
   ver2_visitor_test_025,
   ver2_visitor_product_hoaiditest,
+  ver2_visitor_product_hoaiditestGmail,
   ver2_visitor_product_025,
   ver2_visitor_product_dimot111111,
   ver2_visitor_check_service,
