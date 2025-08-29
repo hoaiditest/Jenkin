@@ -219,6 +219,20 @@ async function add_bp(page, expect) {
     expect(a.numbers[1] + 1).toBe(b.numbers[1]);
   }
 }
+async function add_bp_ver2(page, expect) {
+  const gmailAddresses = [RandomName()];
+  await page.waitForTimeout(1000);
+  for (let i = 0; i < gmailAddresses.length; i++) {
+    const address = gmailAddresses[i];
+    await goto(page, "bp/add");
+    await page.locator("#email").fill(`${address}@gmail.com`);
+    await page.locator("#name").fill(`${address}`);
+    await page.locator("#sur_name").fill(`${address}`);
+    await page.locator("#first_name").fill(`${address}`);
+    await page.locator('//button[@type="submit"]').click();
+    await page.waitForTimeout(5000);
+  }
+}
 
 async function add_personnel_self(page) {
   await goto(page, "personnel-self/add");
@@ -3108,7 +3122,8 @@ async function Check_lastFetch(page, expect) {
 Last fetch: ${lastFetchTime.format("YYYY-MM-DD HH:mm:ss")}
 Japan now: ${nowJapan.format("YYYY-MM-DD HH:mm:ss")} 
 Đã nhấn nút キャッシュ削除 
-https://manager.test.engibase.com/mail-account `
+https://manager.test.engibase.com/mail-account `,
+      ["nesv006@gmail.com"]
     );
   }
 }
