@@ -3010,6 +3010,27 @@ async function run_fun(page, expect) {
     await sentmail_error(page, `${error}`, `${error}`);
   }
 }
+async function EngiConnect(page) {
+  await page.goto("https://sentry.g-root.com/organizations/groot/issues/");
+  await page.locator(`#id_username`).fill(`nesv025@gmail.com`);
+  await page.locator(`#id_password`).fill("Duywasd123");
+  await page.locator(`.btn`).nth(0).click();
+  await page.goto(
+    "https://sentry.g-root.com/organizations/groot/issues/?project=5"
+  );
+  await page.waitForTimeout(1000);
+  const a = await page
+    .locator(`//*[@data-test-id='group']`)
+    .nth(0)
+    .textContent();
+  console.log(a);
+  await page
+    .locator(`//span[contains(text(), 'WARNING response')]`)
+    .nth(0)
+    .click();
+  const b = await page.locator(`//time`).nth(0).textContent();
+  console.log(b);
+}
 async function doda() {
   const browser = await chromium.launch({
     headless: false,
@@ -3078,16 +3099,23 @@ async function Check_lastFetch(page, expect) {
     });
 
   // Tìm cột "Last fetch at" trong hàng đó (cột thứ 4 - đếm từ 1)
-  const lastFetchText = await rowLocator.locator("td").nth(3).innerText();
+  const Text = await rowLocator.locator("td").nth(3).innerText();
 
   // Tách dòng chứa "Last fetch:" (nếu cần tách riêng)
-  const lastFetchLine = lastFetchText
-    .split("\n")
-    .find((line) => line.includes("Last fetch:"));
+  const lastFetchLine = Text.split("\n").find((line) =>
+    line.includes("Last fetch:")
+  );
   // Tách thời gian dạng chuỗi
   const lastFetchTimeStr = lastFetchLine.replace("Last fetch: ", "").trim();
 
   const lastFetchTime = dayjs(lastFetchTimeStr);
+
+  const nextFetchLine = Text.split("\n").find((line) =>
+    line.includes("Next fetch:")
+  );
+  const nextFetchTimeStr = nextFetchLine.replace("Next fetch: ", "").trim();
+
+  const nextFetchTime = dayjs(nextFetchTimeStr);
 
   // Lấy thời gian hiện tại theo múi giờ Nhật Bản (Asia/Tokyo)
   const nowJapanStr = new Date().toLocaleString("ja-JP", {
@@ -3104,26 +3132,46 @@ async function Check_lastFetch(page, expect) {
     console.log("Japan now: ", nowJapan.format("YYYY-MM-DD HH:mm:ss"));
     console.log("Chênh lệch: ", diffMinutes, "phút");
   } else {
-    console.log("⚠️ Last fetch KHÔNG nằm trong khoảng 5 phút");
-    console.log("Last fetch: ", lastFetchTime.format("YYYY-MM-DD HH:mm:ss"));
-    console.log("Japan now: ", nowJapan.format("YYYY-MM-DD HH:mm:ss"));
-    console.log("Chênh lệch: ", diffMinutes, "phút");
-    console.log("Đã nhấn nút キャッシュ削除");
-    await page.locator("#breadcrumb_elements a").nth(0).click();
-    await page.waitForTimeout(5000);
-    await sentmail_error(
-      page,
-      `⚠️ ${new Date().toLocaleString("vi-VN", {
-        timeZone: "Asia/Ho_Chi_Minh",
-      })} Last fetch Chênh lệch: ${diffMinutes} phút ⚠️`,
-      `${new Date().toLocaleString("vi-VN", {
-        timeZone: "Asia/Ho_Chi_Minh",
-      })} Last fetch Chênh lệch: ${diffMinutes} phút
+    const lastFetch = lastFetchTime.format("DD");
+    const nextFetch = nextFetchTime.format("DD");
+    const lastFetchNum = parseInt(lastFetch, 10);
+    const nextFetchNum = parseInt(nextFetch, 10);
+    if (lastFetchNum + 1 === nextFetchNum) {
+      console.log(
+        "🟢 Last fetch KHÔNG nằm trong khoảng 5 phút nhưng nextFetch lớn hơn 1 ngày"
+      );
+    } else {
+      console.log(
+        "⚠️ Last fetch KHÔNG nằm trong khoảng 5 phút và nextFetch nhỏ hơn 1 ngày"
+      );
+      console.log("Last fetch: ", lastFetchTime.format("YYYY-MM-DD HH:mm:ss"));
+      console.log("Next fetch: ", nextFetchTime.format("YYYY-MM-DD HH:mm:ss"));
+      console.log("Japan now: ", nowJapan.format("YYYY-MM-DD HH:mm:ss"));
+      console.log("Chênh lệch: ", diffMinutes, "phút");
+      console.log("Đã nhấn nút キャッシュ削除");
+      await page.locator("#breadcrumb_elements a").nth(0).click();
+      await page.waitForTimeout(5000);
+      await sentmail_error(
+        page,
+        `⚠️ ${new Date().toLocaleString("vi-VN", {
+          timeZone: "Asia/Ho_Chi_Minh",
+        })} Next fetch: ${nextFetchTime.format(
+          "YYYY-MM-DD"
+        )} và Last fetch Chênh lệch: ${diffMinutes} phút ⚠️`,
+        `${new Date().toLocaleString("vi-VN", {
+          timeZone: "Asia/Ho_Chi_Minh",
+        })} Last fetch Chênh lệch: ${diffMinutes} phút
 Last fetch: ${lastFetchTime.format("YYYY-MM-DD HH:mm:ss")}
+Next fetch: ${nextFetchTime.format("YYYY-MM-DD HH:mm:ss")}
 Japan now: ${nowJapan.format("YYYY-MM-DD HH:mm:ss")} 
 Đã nhấn nút キャッシュ削除 
 https://manager.test.engibase.com/mail-account `,
-    );
+        ["nesv006@gmail.com"]
+      );
+    }
+
+    /*
+     */
   }
 }
 async function FileUpload(page) {
@@ -4464,4 +4512,5 @@ module.exports = {
   sentmail_errorJP,
   ver2_add_personnel_self,
   Check_lastFetch,
+  EngiConnect,
 };
