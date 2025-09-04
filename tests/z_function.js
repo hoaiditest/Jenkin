@@ -3123,7 +3123,6 @@ Last fetch: ${lastFetchTime.format("YYYY-MM-DD HH:mm:ss")}
 Japan now: ${nowJapan.format("YYYY-MM-DD HH:mm:ss")} 
 Đã nhấn nút キャッシュ削除 
 https://manager.test.engibase.com/mail-account `,
-      ["nesv006@gmail.com"]
     );
   }
 }
