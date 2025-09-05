@@ -353,20 +353,10 @@ async function ver2_add_personnel_self(page) {
   await page.locator(".btn-select-skills").click();
   await page.waitForTimeout(5000);
   for (let i = 0; i < 10; i++) {
-    try {
-      await page
-        .locator("#tab-言語・サービス input")
-        .nth(Math.floor(Math.random() * 244))
-        .click({ timeout: 5000 });
-    } catch (error) {
-      console.log(
-        "Thay đổi ID từ #tab-言語・サービス input thành #tab-言語 input"
-      );
-      await page
-        .locator("#tab-言語 input")
-        .nth(Math.floor(Math.random() * 244))
-        .click();
-    }
+    await page
+      .locator("#tab-言語 input")
+      .nth(Math.floor(Math.random() * 244))
+      .click();
     await page.waitForTimeout(1000);
   }
   await page.locator(".choose-skills").click();
