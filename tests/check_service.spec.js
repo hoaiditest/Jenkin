@@ -98,11 +98,7 @@ Status Code: ${response.status()}
 
 test("Engibase ", async ({ page }) => {
   test.setTimeout(3600000);
-  console.log(
-    `[${new Date().toLocaleString()}] Start Check_Engibase timeZone VN\n`
-  );
-  try {
-    /*login*/
+  async function Check_Engibase(page) {
     await login_all(
       page,
       "https://visitor.engibase.com/",
@@ -110,8 +106,22 @@ test("Engibase ", async ({ page }) => {
       "Duywasd123"
     );
     await click_menu(page, expect);
+  }
+  console.log(
+    `[${new Date().toLocaleString()}] Start Check_Engibase timeZone VN\n`
+  );
+  try {
+    await Check_Engibase(page);
   } catch (error) {
-    await sentmail_error(page, `Check service ${error}`, `${error}`);
+    try {
+      await Check_Engibase(page);
+    } catch (error) {
+      try {
+        await Check_Engibase(page);
+      } catch (error) {
+        await sentmail_error(page, `${error}`, `${error}`);
+      }
+    }
   }
   console.log(
     `[${new Date().toLocaleString()}] End Check_Engibase timeZone VN\n`

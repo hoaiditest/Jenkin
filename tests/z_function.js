@@ -1599,7 +1599,7 @@ async function click_menu(page) {
     if (menu_customer_InnerTexts[a] != "ログアウト") {
       const url1 = await page.url();
       await page.waitForTimeout(1000);
-      await menu[a].click({ timeout: 240000 });
+      await menu[a].click({ timeout: 10000 });
       // console.log(menu[a]);
       await page.waitForTimeout(1000);
       const url2 = await page.url();
