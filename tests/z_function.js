@@ -3000,26 +3000,80 @@ async function run_fun(page, expect) {
     await sentmail_error(page, `${error}`, `${error}`);
   }
 }
-async function EngiConnect(page) {
+async function EngiConnect(page, expect) {
+  await page.setViewportSize({ width: 1920, height: 1080 });
   await page.goto("https://sentry.g-root.com/organizations/groot/issues/");
   await page.locator(`#id_username`).fill(`nesv025@gmail.com`);
   await page.locator(`#id_password`).fill("Duywasd123");
   await page.locator(`.btn`).nth(0).click();
   await page.goto(
-    "https://sentry.g-root.com/organizations/groot/issues/?project=5"
+    "https://sentry.g-root.com/organizations/groot/issues/?environment=learninconnect_test&project=2&statsPeriod=1h"
   );
   await page.waitForTimeout(1000);
-  const a = await page
-    .locator(`//*[@data-test-id='group']`)
-    .nth(0)
-    .textContent();
-  console.log(a);
-  await page
-    .locator(`//span[contains(text(), 'WARNING response')]`)
-    .nth(0)
-    .click();
-  const b = await page.locator(`//time`).nth(0).textContent();
-  console.log(b);
+  // Tính toán thời gian 15 phút trước
+  const fifteenMinutesAgo = new Date();
+  fifteenMinutesAgo.setMinutes(fifteenMinutesAgo.getMinutes() - 15);
+  console.log(`Kiểm tra các lỗi kể từ: ${fifteenMinutesAgo.toISOString()}`);
+
+  // Chờ cho các phần tử lỗi tải
+  await page.waitForSelector(".body-sidebar");
+
+  // Lấy tất cả các phần tử lỗi
+  const errorElements = await page.locator('[data-test-id="group"]').all();
+  let foundError = false;
+
+  for (const element of errorElements) {
+    // Lấy tiêu đề lỗi
+    const errorTitle = await element
+      .locator(`[data-test-id="event-issue-header"]`)
+      .innerText();
+
+    // Lấy thời gian xảy ra lỗi
+    const errorTimeAttribute = await element
+      .locator("time")
+      .first()
+      .getAttribute("datetime");
+    const errorTime = new Date(errorTimeAttribute);
+
+    // Kiểm tra các lỗi mong muốn và so sánh thời gian
+    if (errorTime >= fifteenMinutesAgo) {
+      if (errorTitle.includes("DB_CONNECTION_ERROR")) {
+        console.log(
+          `🔴 Lỗi DB_CONNECTION_ERROR được tìm thấy trong 15 phút gần nhất:`
+        );
+        console.log(`   - Tiêu đề: ${errorTitle}`);
+        console.log(`   - Thời gian: ${errorTime.toISOString()}`);
+        await element.locator(`[data-test-id="event-issue-header"]`).click();
+        await page.waitForTimeout(1000);
+        const url_DB_CONNECTION_ERROR = await page.url();
+        await sentmail_errorJP(
+          page,
+          `EngiConnect : DB_CONNECTION_ERROR`,
+          `${url_DB_CONNECTION_ERROR}`
+        );
+        await page.goBack();
+        foundError = true;
+      }
+
+      if (errorTitle.includes("SERVICE_UNAVAILABLE")) {
+        console.log(
+          `🔴 Lỗi SERVICE_UNAVAILABLE được tìm thấy trong 15 phút gần nhất:`
+        );
+        console.log(`   - Tiêu đề: ${errorTitle}`);
+        console.log(`   - Thời gian: ${errorTime.toISOString()}`);
+        await element.locator(`[data-test-id="event-issue-header"]`).click();
+        await page.waitForTimeout(1000);
+        const url_SERVICE_UNAVAILABLE = await page.url();
+        await sentmail_errorJP(
+          page,
+          `EngiConnect : SERVICE_UNAVAILABLE`,
+          `${url_SERVICE_UNAVAILABLE}`
+        );
+        await page.goBack();
+        foundError = true;
+      }
+    }
+  }
 }
 async function doda() {
   const browser = await chromium.launch({
@@ -3505,6 +3559,7 @@ async function sentmail_error(page = null, title, content, mail_error) {
     },
   });
   await transporter.sendMail({
+    from: '"Mr.Duy-Tester" <maddison53@ethereal.email>',
     to: ["hoaiditest@gmail.com", `${mail_error}`],
     subject: title,
     text: content,
