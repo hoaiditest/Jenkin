@@ -113,19 +113,7 @@ test("Engibase ", async ({ page }) => {
   try {
     await Check_Engibase(page);
   } catch (error) {
-    try {
-      await Check_Engibase(page);
-    } catch (error) {
-      try {
-        await Check_Engibase(page);
-      } catch (error) {
-        await sentmail_error(
-          page,
-          `Daily Click Menu Jenkin ${error}`,
-          `${error}`
-        );
-      }
-    }
+    await sentmail_error(page, `Daily Click Menu Jenkin ${error}`, `${error}`);
   }
   console.log(
     `[${new Date().toLocaleString()}] End Check_Engibase timeZone VN\n`
