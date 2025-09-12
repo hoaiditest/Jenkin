@@ -3049,7 +3049,8 @@ async function EngiConnect(page, expect) {
         await sentmail_errorJP(
           page,
           `EngiConnect : DB_CONNECTION_ERROR`,
-          `${url_DB_CONNECTION_ERROR}`
+          `${url_DB_CONNECTION_ERROR}`,
+          ["hayashi-y@learningift.com"]
         );
         await page.goBack();
         foundError = true;
@@ -3067,7 +3068,8 @@ async function EngiConnect(page, expect) {
         await sentmail_errorJP(
           page,
           `EngiConnect : SERVICE_UNAVAILABLE`,
-          `${url_SERVICE_UNAVAILABLE}`
+          `${url_SERVICE_UNAVAILABLE}`,
+          ["hayashi-y@learningift.com"]
         );
         await page.goBack();
         foundError = true;
