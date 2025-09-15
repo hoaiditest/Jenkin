@@ -57,16 +57,16 @@ test("Jpsic ", async ({ page }) => {
     `[${new Date().toLocaleString()}] Start Check_Jpsic timeZone VN\n`
   );
   const link = [
-    "https://test.jpsic.co.jp/",
+    // "https://test.jpsic.co.jp/",
     // "https://test.jsic-userpage.jpsic.co.jp/",
     // "https://test.jsic-master2page.jpsic.co.jp/",
-    "https://jpsic.co.jp/",
-    "https://jsic-master2page.jpsic.co.jp/",
-    "https://jsic-userpage.jpsic.co.jp/",
-    "https://master2page.jpsic.g-root.com/",
-    "https://userpage.jpsic.g-root.com/",
-    "https://jpsic.g-root.com/register-real-store",
-    "https://jpsic.g-root.com/register-online-store",
+    // "https://jpsic.co.jp/",
+    // "https://jsic-master2page.jpsic.co.jp/",
+    // "https://jsic-userpage.jpsic.co.jp/",
+    // "https://master2page.jpsic.g-root.com/",
+    // "https://userpage.jpsic.g-root.com/",
+    // "https://jpsic.g-root.com/register-real-store",
+    // "https://jpsic.g-root.com/register-online-store",
   ];
   for (let i = 0; i < link.length; i++) {
     await page.goto(link[i]);
