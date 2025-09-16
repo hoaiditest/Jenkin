@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { EngiConnect } from "./z_function";
+import { EngiConnect, sentmail_error } from "./z_function";
 
 test("EngiConnect ", async ({ page }) => {
   console.log(

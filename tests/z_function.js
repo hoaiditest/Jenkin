@@ -3007,12 +3007,12 @@ async function EngiConnect(page, expect) {
   await page.locator(`#id_password`).fill("Duywasd123");
   await page.locator(`.btn`).nth(0).click();
   await page.goto(
-    "https://sentry.g-root.com/organizations/groot/issues/?environment=learninconnect_test&project=2&statsPeriod=1h"
+    "https://sentry.g-root.com/organizations/groot/issues/?project=2&statsPeriod=24h"
   );
   await page.waitForTimeout(1000);
   // Tính toán thời gian 15 phút trước
   const fifteenMinutesAgo = new Date();
-  fifteenMinutesAgo.setMinutes(fifteenMinutesAgo.getMinutes() - 15);
+  fifteenMinutesAgo.setMinutes(fifteenMinutesAgo.getMinutes() - 1440);
   console.log(`Kiểm tra các lỗi kể từ: ${fifteenMinutesAgo.toISOString()}`);
 
   // Chờ cho các phần tử lỗi tải
@@ -3039,18 +3039,24 @@ async function EngiConnect(page, expect) {
     if (errorTime >= fifteenMinutesAgo) {
       if (errorTitle.includes("DB_CONNECTION_ERROR")) {
         console.log(
-          `🔴 Lỗi DB_CONNECTION_ERROR được tìm thấy trong 15 phút gần nhất:`
+          `🔴 Lỗi DB_CONNECTION_ERROR được tìm thấy trong 24h gần nhất:`
         );
         console.log(`   - Tiêu đề: ${errorTitle}`);
         console.log(`   - Thời gian: ${errorTime.toISOString()}`);
-        await element.locator(`[data-test-id="event-issue-header"]`).click();
+        await element
+          .locator(`//div[@data-test-id="event-issue-header"]//a`)
+          .click();
         await page.waitForTimeout(1000);
         const url_DB_CONNECTION_ERROR = await page.url();
         await sentmail_errorJP(
           page,
           `EngiConnect : DB_CONNECTION_ERROR`,
           `${url_DB_CONNECTION_ERROR}`,
-          ["hayashi-y@learningift.com"]
+          [
+            "h-inui@learningift.com",
+            "hayashi-y@learningift.com",
+            "nesv006@gmail.com",
+          ]
         );
         await page.goBack();
         foundError = true;
@@ -3058,18 +3064,24 @@ async function EngiConnect(page, expect) {
 
       if (errorTitle.includes("SERVICE_UNAVAILABLE")) {
         console.log(
-          `🔴 Lỗi SERVICE_UNAVAILABLE được tìm thấy trong 15 phút gần nhất:`
+          `🔴 Lỗi SERVICE_UNAVAILABLE được tìm thấy trong 24h gần nhất:`
         );
         console.log(`   - Tiêu đề: ${errorTitle}`);
         console.log(`   - Thời gian: ${errorTime.toISOString()}`);
-        await element.locator(`[data-test-id="event-issue-header"]`).click();
+        await element
+          .locator(`//div[@data-test-id="event-issue-header"]//a`)
+          .click();
         await page.waitForTimeout(1000);
         const url_SERVICE_UNAVAILABLE = await page.url();
         await sentmail_errorJP(
           page,
           `EngiConnect : SERVICE_UNAVAILABLE`,
           `${url_SERVICE_UNAVAILABLE}`,
-          ["hayashi-y@learningift.com"]
+          [
+            "h-inui@learningift.com",
+            "hayashi-y@learningift.com",
+            "nesv006@gmail.com",
+          ]
         );
         await page.goBack();
         foundError = true;
