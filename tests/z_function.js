@@ -4662,4 +4662,5 @@ module.exports = {
   ver2_add_personnel_self,
   Check_lastFetch,
   EngiConnect,
+  check_sent_mail_detail,
 };
