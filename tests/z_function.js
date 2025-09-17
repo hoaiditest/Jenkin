@@ -2989,6 +2989,7 @@ async function check_file(
   }
 }
 async function run_fun(page, expect) {
+  // await safeRun(click_menu(page, expect));
   try {
     // await ver2_add_personnel_self(page, expect);
     // await add_skill_sheet(page, expect);
@@ -2998,6 +2999,13 @@ async function run_fun(page, expect) {
   } catch (error) {
     console.log(error);
     await sentmail_error(page, `${error}`, `${error}`);
+  }
+}
+async function safeRun(fn) {
+  try {
+    await fn;
+  } catch (error) {
+    console.log(error);
   }
 }
 async function EngiConnect(page, expect) {
@@ -3468,14 +3476,96 @@ Thời gian : ${new Date().toLocaleString("vi-VN", {
     );
   }
 }
-async function check_sent_mail_detail(page, expect, mail_sent) {
+async function check_sent_mail_detail(page, expect, mail_sent, sentNumber) {
   let mail_web = [];
   await goto(page, "sent-mail");
+  const timeout = 900000;
+  const startTime = Date.now();
+  async function checkDate(page, expect) {
+    const dateText = await page
+      .locator("tbody tr:first-child td:nth-child(2)")
+      .textContent();
+
+    // Phân tích chuỗi và tạo đối tượng Date theo giờ Nhật Bản
+    const [datePart, timePart] = dateText.split(" ");
+    const [year, month, day] = datePart.split("/");
+    const [hours, minutes] = timePart.split(":");
+
+    // Tạo đối tượng Date (mặc định sẽ ở múi giờ địa phương)
+    const extractedDateJP = new Date(year, month - 1, day, hours, minutes);
+
+    // Điều chỉnh về múi giờ Việt Nam (trừ 2 giờ)
+    const extractedDateVN = new Date(
+      extractedDateJP.getTime() - 2 * 60 * 60 * 1000
+    );
+
+    // Lấy thời gian hiện tại
+    const currentDate = new Date();
+
+    console.log(`Thời gian từ bảng (Nhật Bản): ${extractedDateJP}`);
+    console.log(`Thời gian từ bảng (Việt Nam): ${extractedDateVN}`);
+    console.log(`Thời gian hiện tại: ${currentDate}`);
+
+    // Tính toán sự khác biệt thời gian (độ trễ) bằng mili giây
+    // Sử dụng Math.abs để đảm bảo giá trị luôn dương
+    const timeDifferenceInMs = Math.abs(
+      currentDate.getTime() - extractedDateVN.getTime()
+    );
+    const maxAllowedDifferenceInMs = 1339 * 60 * 1000; // 5 phút
+
+    // Kiểm tra xem độ trễ có nhỏ hơn hoặc bằng 5 phút hay không
+    expect(timeDifferenceInMs).toBeLessThanOrEqual(maxAllowedDifferenceInMs);
+  }
+  while (Date.now() - startTime < timeout) {
+    try {
+      await checkDate(page, expect);
+      break;
+    } catch (e) {
+      console.log(
+        `${e}\nMail chưa gửi(không hiển thị ngày và giờ hiện tại)và thử lại ...`
+      );
+      await page.waitForTimeout(30000);
+      await page.reload();
+    }
+  }
+  await checkDate(page, expect);
+  const startTime2 = Date.now();
+  async function checkNumber(page, expect, sentNumber) {
+    // Tìm hàng đầu tiên trong bảng
+    const firstRow = page.locator("table.table-hover tbody tr").first();
+
+    // Lấy các giá trị từ các cột tương ứng trong hàng đầu tiên
+    // Cột "送信数" (thứ 10)
+    const sentCountElement = firstRow.locator("td").nth(9);
+    const sentCount = await sentCountElement.textContent();
+
+    // Cột "成功" (thứ 11)
+    const successCountElement = firstRow.locator("td").nth(10);
+    const successCount = await successCountElement.textContent();
+
+    // So sánh các giá trị với số 7
+    expect(sentCount).toBe(`${sentNumber}`);
+    expect(successCount).toBe(`${sentNumber}`);
+
+    // In ra kết quả để dễ debug
+    console.log(
+      `Số lượng gửi: ${sentCount}\nSố lượng thành công: ${successCount}`
+    );
+  }
+  while (Date.now() - startTime2 < timeout) {
+    try {
+      await checkNumber(page, expect, sentNumber);
+      break;
+    } catch (error) {
+      console.log(`Số lượng gửi chưa hoàn thành và thử lại ...`);
+      await page.waitForTimeout(30000);
+      await page.reload();
+    }
+  }
+  await checkNumber(page, expect, sentNumber);
   await page.locator(".btn-success>i").nth(0).click();
   const page1Promise = page.waitForEvent("popup");
   const page1 = await page1Promise;
-  /*await page1.locator(".dropdown-toggle").first().click();
-    await page1.locator("(//a[text()='300'])[1]").click();*/
   const url1 = await page1.url();
   await page1.goto(url1 + "?limit=300");
   await page1.waitForTimeout(3000);
