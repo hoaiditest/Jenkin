@@ -1596,7 +1596,7 @@ async function click_menu(page) {
   await console.log(menu.length);
   for (let a = 0; a < menu.length; a++) {
     // await console.log(menu[a]);
-    if (menu_customer_InnerTexts[a] != "ログアウト" && a != 42) {
+    if (menu_customer_InnerTexts[a] != "ログアウト") {
       const url1 = await page.url();
       await page.waitForTimeout(1000);
       await menu[a].click({ timeout: 10000 });
