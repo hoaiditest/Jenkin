@@ -3511,7 +3511,7 @@ async function check_sent_mail_detail(page, expect, mail_sent, sentNumber) {
     const timeDifferenceInMs = Math.abs(
       currentDate.getTime() - extractedDateVN.getTime()
     );
-    const maxAllowedDifferenceInMs = 1339 * 60 * 1000; // 5 phút
+    const maxAllowedDifferenceInMs = 135 * 60 * 1000; // 5 phút
 
     // Kiểm tra xem độ trễ có nhỏ hơn hoặc bằng 5 phút hay không
     expect(timeDifferenceInMs).toBeLessThanOrEqual(maxAllowedDifferenceInMs);
