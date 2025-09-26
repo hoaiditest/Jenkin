@@ -2672,7 +2672,7 @@ async function gemini() {
   let personnel = fs.readFileSync("file/gemini/per.txt", "utf-8");
   let project = fs.readFileSync("file/gemini/pro.txt", "utf-8");
   const mail_have = "dimot111111@gmail.com";
-  const number = 2;
+  const number = 5;
   await page.locator("rich-textarea p").fill(`${per}`);
   await page.locator(".send-button-icon").click();
   await page.waitForTimeout(10000);
@@ -3685,7 +3685,7 @@ async function sentmail_file(title, content, file, email) {
     secure: true,
     auth: {
       user: "didimimi1999dimi@gmail.com",
-      pass: "ocgj ibma nphi ivxa",
+      pass: "rqax mvhm qntl krgh",
     },
   });
   await transporter.sendMail({
