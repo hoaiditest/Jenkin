@@ -298,6 +298,7 @@ async function add_personnel_self(page) {
 }
 async function ver2_add_personnel_self(page) {
   await goto(page, "personnel-self/add");
+  await page.waitForTimeout(180000);
   await page.locator("#ac_first_name").fill(RandomName());
   await page.locator("#ac_last_name").fill(RandomName());
   await page.locator("#first_name").fill(RandomName());
@@ -3132,6 +3133,23 @@ async function createData_SentMail(page, expect) {
   await sent_personnel_individual(page);
   await sent_project_individual_self(page);
   await sent_project_individual(page);
+  /*outbox*/
+  await outbox(page, "sent-mail/sent", "sent-mail/outbox", "outbox_sent_mail");
+  await outbox(
+    page,
+    "sent-mail/sent-self",
+    "sent-mail/outbox-self",
+    "outbox_sent_mail_self"
+  );
+  /*sent_mail_individual*/
+  await sent_personnel_individual_self(page);
+  await sent_personnel_individual(page);
+  await sent_project_individual_self(page);
+  await sent_project_individual(page);
+  /*interaction*/
+  await sent_mail_interaction(page);
+  await sent_mail_interaction_template(page);
+  await outbox_interaction(page);
 }
 async function Check_Warning(page, expect) {
   await page.goto("https://manager.test.engibase.com/mail-account");
