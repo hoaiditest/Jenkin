@@ -7,7 +7,7 @@ test("Jpsic ", async ({ page }) => {
     `[${new Date().toLocaleString()}] Start Check_Jpsic timeZone VN\n`
   );
   const link = [
-    "https://test.jpsic.co.jp/",
+    "https://jpsic.g-root.com/",
     // "https://test.jsic-userpage.jpsic.co.jp/",
     // "https://test.jsic-master2page.jpsic.co.jp/",
     // "https://jpsic.co.jp/",
