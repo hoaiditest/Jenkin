@@ -9,7 +9,7 @@ test("EngiConnect ", async ({ page }) => {
   try {
     await EngiConnect(page, expect);
   } catch (error) {
-    await sentmail_error(page, `${error}`, `${error}`);
+    await sentmail_error(page, `EngiConnect Daily : ${error}`, `${error}`);
   }
   console.log(`[${new Date().toLocaleString()}] End EngiConnect timeZone VN\n`);
 });
