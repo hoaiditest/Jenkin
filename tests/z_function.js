@@ -1899,8 +1899,6 @@ async function fetch_mail_project() {
     const remote_option = ["フルリモート", "一部リモート", "常駐"];
     const remote =
       remote_option[Math.floor(Math.random() * remote_option.length)];
-    const position =
-      position_option[Math.floor(Math.random() * position_option.length)];
     const content_project = `
 パートナー各社ご担当者様
 
