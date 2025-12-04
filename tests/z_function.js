@@ -298,7 +298,6 @@ async function add_personnel_self(page) {
 }
 async function ver2_add_personnel_self(page) {
   await goto(page, "personnel-self/add");
-  await page.waitForTimeout(180000);
   await page.locator("#ac_first_name").fill(RandomName());
   await page.locator("#ac_last_name").fill(RandomName());
   await page.locator("#first_name").fill(RandomName());
@@ -1719,51 +1718,264 @@ async function personnel_product_025(title_per, content_per) {
     });
   }
 }
-async function skill_personnel_product_025() {
-  for (let a = 1; a <= 1; a++) {
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      auth: {
-        // TODO: replace `user` and `pass` values from <https://forwardemail.net>
-        user: "dimot111111@gmail.com",
-        pass: "drvm wsqm bjgk ispi",
-      },
-    });
-    const info = await transporter.sendMail({
-      to: "nesv025@gmail.com",
-      subject: `skill_personnel_product_025 : mail in for ${a} hoaiditest1_engibase ${RandomString(
-        5
-      )}`,
-      text: `
-      ご担当者様
+const position_option = [
+  "SE（システムエンジニア）",
+  "PG（プログラマー）",
+  "テスター",
+  "PM（プロジェクトマネージャー）",
+  "調査・分析",
+  "要件定義",
+  "基本設計",
+  "詳細設計",
+  "開発",
+  "単体テスト",
+  "結合テスト",
+  "総合テスト",
+  "運用・保守",
+  "設計・構築",
+];
+const mail_fetch = `dibar333333@gmail.com`;
+const number_fetch = 5;
+async function fetch_mail_per() {
+  for (let a = 0; a < number_fetch; a++) {
+    const name = `${String.fromCharCode(
+      65 + Math.floor(Math.random() * 26)
+    )}.${String.fromCharCode(65 + Math.floor(Math.random() * 26))}`;
+    const sex_option = ["男性", "女性", "その他"];
+    const sex = sex_option[Math.floor(Math.random() * sex_option.length)];
+    const affiliation_option = [
+      "一社先プロパー",
+      "一社先個人事業主",
+      "二社先以降プロパー",
+      "二社先以降個人事業主",
+    ];
+    const affiliation =
+      affiliation_option[Math.floor(Math.random() * affiliation_option.length)];
+    const content_per = `
+パートナー各社ご担当者様
 
-弊社が懇意にさせて頂いているBPの要員様のご紹介をさせて頂きます。
-見合う案件がございましたらご紹介の程よろしくお願いいたします。
 
 
-****************************************
-        【氏 名】${RandomString(1)} ${RandomString(1)}
-        【年 齢】3${RandomNumber(1)}歳
-        【性 別】男性
-        【単 価】1${RandomNumber(3)}万  
-          ■保有スキル：
-          ・Sale  経験：2年1ヶ月  
-          ・Manager  経験：1年6ヶ月  
+お世話になっております。
 
---
-_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/
+テックリンク株式会社の高橋です。
 
-          ${RandomString(5)}テック株式会社
-          営業部：${RandomString(5)}
 
-          個人メール：${RandomString(5)}@${RandomString(5)}.co.jp 
 
-          TEL：080-${RandomNumber(4)}-${RandomNumber(4)} 
-        
-                `,
-    });
+以下の人材をご紹介いたします。
+
+貴社の案件ニーズに合う場合、ぜひご提案をお願いいたします。
+
+
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+
+
+氏名: ${name}
+
+年齢: 3${RandomNumber(1)}歳
+
+性別: ${sex}
+
+所属: ${affiliation}
+
+ポジション・工程: ${
+      position_option[Math.floor(Math.random() * position_option.length)]
+    }、${
+      position_option[Math.floor(Math.random() * position_option.length)]
+    }、${
+      position_option[Math.floor(Math.random() * position_option.length)]
+    }、${
+      position_option[Math.floor(Math.random() * position_option.length)]
+    }、${
+      position_option[Math.floor(Math.random() * position_option.length)]
+    }、${
+      position_option[Math.floor(Math.random() * position_option.length)]
+    }、${
+      position_option[Math.floor(Math.random() * position_option.length)]
+    }、${position_option[Math.floor(Math.random() * position_option.length)]}
+
+国籍: 日本
+
+都道府県: 神奈川県
+
+エリア: 関東エリア
+
+最寄駅: 横浜駅
+
+要員電話番号: 0${RandomNumber(2)}-${RandomNumber(4)}-${RandomNumber(4)}
+
+要員メールアドレス: ${RandomString(6)}@techlink.jp
+
+スキルポイント:${RandomNumber(2)} pt
+
+
+
+休職期間: なし
+
+退職日: なし
+
+希望単金: 月額9${RandomNumber(1)}万円〜月額1${RandomNumber(2)}万円
+
+希望参画時期: 即日可能
+
+希望面談回数: ${Math.floor(Math.random() * 3) + 1}回
+
+
+
+スキル:
+
+
+${Random(array["languages"])}（${RandomNumber(1)}年）、
+${Random(array["languages"])}（${RandomNumber(1)}年）、
+${Random(array["tools"])}（${RandomNumber(1)}年）、
+${Random(array["tools"])}（${RandomNumber(1)}年）、
+${Random(array["OS"])}（${RandomNumber(1)}年）、
+${Random(array["OS"])}（${RandomNumber(1)}年）、
+${Random(array["DB"])}（${RandomNumber(1)}年）、
+${Random(array["DB"])}（${RandomNumber(1)}年）、
+${Random(array["network"])}（${RandomNumber(1)}年）、
+${Random(array["network"])}（${RandomNumber(1)}年）、
+${Random(array["skills"])}（${RandomNumber(1)}年）、 
+${Random(array["skills"])}（${RandomNumber(1)}年）、  
+
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+
+
+ご提案いただける案件やご質問がございましたら、
+
+お手数ですが高橋のアドレス takahashi@techlink.jp をCCに入れてご返信いただけますと幸いです。
+
+
+
+以上、どうぞよろしくお願いいたします。
+
+
+
+テックリンク株式会社
+
+営業部
+
+高橋 健二 / Takahashi Kenji
+
+TEL: 0${RandomNumber(1)}-${RandomNumber(4)}-${RandomNumber(4)}
+
+MAIL: takahashi@techlink.jp
+
+HP: https://techlink.jp/
+
+
+
+〒220-0005
+
+神奈川県横浜市西区南幸1-1-1 テックビル5F`;
+    await create_fileExcel(name);
+    await sentmail_file(
+      `Personnel ${name} ${RandomNumber(1)}`,
+      `${content_per}`,
+      `${name}.xlsx`,
+      `${mail_fetch}`
+    );
+  }
+}
+async function fetch_mail_project() {
+  for (let a = 0; a < number_fetch; a++) {
+    const name_project = `${Random(array["skills"])}`;
+    const restrictions_option = [
+      "貴社プロパー",
+      "貴社個人事業主",
+      "１社下プロパー",
+      "１社下個人事業主",
+      "2社下以降プロパー",
+      "2社下以降個人事業主",
+    ];
+    const restrictions =
+      restrictions_option[
+        Math.floor(Math.random() * restrictions_option.length)
+      ];
+    const remote_option = ["フルリモート", "一部リモート", "常駐"];
+    const remote =
+      remote_option[Math.floor(Math.random() * remote_option.length)];
+    const position =
+      position_option[Math.floor(Math.random() * position_option.length)];
+    const content_project = `
+パートナー各社ご担当者様
+
+お世話になっております。
+クリエイティブテック株式会社の林です。
+
+このたび、弊社で新たに開始するモバイルアプリ開発プロジェクトについてご提案させていただきます。
+ご興味がございましたら、ぜひご検討いただけますと幸いです。
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+プロジェクト名: 開発プロジェクト ${name_project}
+開始時期: 2026年${Math.floor(Math.random() * 12) + 1}月
+期間: ${Math.floor(Math.random() * 12) + 1}ヶ月
+業務形態: ${remote}
+作業場所: JR品川駅 または 田町駅 
+商流制限: ${restrictions}
+報酬: 月額9${RandomNumber(1)}万円〜月額1${RandomNumber(2)}万円
+参画人数: ${RandomNumber(1)}名
+面談回数: ${Math.floor(Math.random() * 3) + 1}回
+精算: 9${RandomNumber(1)}～1${RandomNumber(2)}h
+
+ポジション・工程: ${
+      position_option[Math.floor(Math.random() * position_option.length)]
+    }、${
+      position_option[Math.floor(Math.random() * position_option.length)]
+    }、${
+      position_option[Math.floor(Math.random() * position_option.length)]
+    }、${
+      position_option[Math.floor(Math.random() * position_option.length)]
+    }、${
+      position_option[Math.floor(Math.random() * position_option.length)]
+    }、${
+      position_option[Math.floor(Math.random() * position_option.length)]
+    }、${
+      position_option[Math.floor(Math.random() * position_option.length)]
+    }、${position_option[Math.floor(Math.random() * position_option.length)]}
+
+プロジェクトの概要
+新規顧客向けのモバイルアプリを開発し、ユーザーが便利にサービスを利用できるプラットフォームを提供します。
+UI/UXのデザインを重視し、ユーザーのニーズに応じた機能を搭載します。
+
+主な業務内容
+
+${Random(array["languages"])}（${RandomNumber(1)}年）、
+${Random(array["languages"])}（${RandomNumber(1)}年）、
+${Random(array["tools"])}（${RandomNumber(1)}年）、
+${Random(array["tools"])}（${RandomNumber(1)}年）、
+${Random(array["OS"])}（${RandomNumber(1)}年）、
+${Random(array["OS"])}（${RandomNumber(1)}年）、
+${Random(array["DB"])}（${RandomNumber(1)}年）、
+${Random(array["DB"])}（${RandomNumber(1)}年）、
+${Random(array["network"])}（${RandomNumber(1)}年）、
+${Random(array["network"])}（${RandomNumber(1)}年）、
+${Random(array["skills"])}（${RandomNumber(1)}年）、 
+${Random(array["skills"])}（${RandomNumber(1)}年）、  
+
+以上、プロジェクトに興味がある場合やご質問がございましたら、
+お気軽にご連絡ください。お待ちしております。
+
+クリエイティブテック株式会社
+プロジェクトマネジメント部
+林 美咲 / Hayashi Misaki
+TEL：03-1234-5678
+MAIL：hayashi@creative-tech.co.jp
+HP：https://creative-tech.co.jp/
+
+〒150-0012
+東京都渋谷区神宮前1-2-3 クリエイティブビル 4F`;
+    await create_fileExcel(name_project);
+    await sentmail_file(
+      `Project ${name_project} ${RandomNumber(1)}`,
+      `${content_project}`,
+      `${name_project}.xlsx`,
+      `${mail_fetch}`
+    );
   }
 }
 async function project_product_025(title_project, content_project) {
@@ -2214,6 +2426,10 @@ async function interaction_fillMail_file(page) {
   await page.waitForTimeout(10000);
 }
 async function interaction_sent(page) {
+  await page.locator(".btn_confirm").click();
+  await page.waitForTimeout(3000);
+  await page.locator(".row .btn-secondary").click();
+  await interaction_fillMail_file(page);
   await page.locator(".btn_confirm").click();
   await page.waitForTimeout(5000);
   await page.locator(".btn_send").click();
@@ -4073,8 +4289,8 @@ async function mail_infor(text) {
 }
 async function mail_infor2(text) {
   const patterns = {
-    name_per: /氏名[:：\s]+([^\n]+)/,
-    name_project: /プロジェクト名:\s*(.+)/,
+    name_per: /氏名[:：\s]+([^\s\n\r]+)/,
+    name_project: /プロジェクト名:\s*(.+?)(?=\s*[^\s]+:|$)/,
     age: /年齢[:：\s]+(\d+)歳/,
     gender: /性別[:：\s]+([^\n]+)/,
     salary: /希望単金[:：\s]+月額(\d+)万円〜/,
@@ -4647,7 +4863,6 @@ module.exports = {
   personnel_envtest_025,
   project_envtest_025,
   personnel_product_025,
-  skill_personnel_product_025,
   project_product_025,
   personnel_product_hoangoisan,
   project_product_hoangoisan,
