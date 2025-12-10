@@ -4807,19 +4807,13 @@ async function teams_chat() {
   await page.locator(`input[type="password"]`).fill(`Duywasd123`);
   await page.locator(`button[type="submit"]`).click();
   await page.waitForTimeout(3000);
-  await page.screenshot(
-    { path: "./output/screenshot.png" },
-    { timeout: 10000 }
-  );
+  await page.screenshot({ path: "./file/screenshot.png" }, { timeout: 10000 });
   await page.locator(`button[type="submit"]`).nth(1).click();
   await page.locator(`span[title="Di Hoai"]`).click();
   await page.locator(`div[data-tid="ckeditor"]`).fill(`Hi`);
   await page.locator(`button[name="send"]`).click();
   await page.waitForTimeout(5000);
-  await page.screenshot(
-    { path: "./output/screenshot.png" },
-    { timeout: 10000 }
-  );
+  await page.screenshot({ path: "./file/screenshot.png" }, { timeout: 10000 });
 }
 async function recordVideo() {
   const browser = await chromium.launch();
@@ -4923,4 +4917,5 @@ module.exports = {
   Check_lastFetch,
   EngiConnect,
   check_sent_mail_detail,
+  teams_chat,
 };
