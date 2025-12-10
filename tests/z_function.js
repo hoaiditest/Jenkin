@@ -4792,7 +4792,7 @@ async function check_class(page) {
   }
   return vps;
 }
-async function teams_chat() {
+async function teams_chat(name, message) {
   const browser = await firefox.launch({
     headless: true,
     args: ["--disable-blink-features=AutomationControlled"],
@@ -4809,8 +4809,8 @@ async function teams_chat() {
   await page.waitForTimeout(3000);
   await page.screenshot({ path: "./file/screenshot.png" }, { timeout: 10000 });
   await page.locator(`button[type="submit"]`).nth(1).click();
-  await page.locator(`span[title="Di Hoai"]`).click();
-  await page.locator(`div[data-tid="ckeditor"]`).fill(`Hi`);
+  await page.locator(`span[title='${name}']`).click();
+  await page.locator(`div[data-tid="ckeditor"]`).fill(`${message}`);
   await page.locator(`button[name="send"]`).click();
   await page.waitForTimeout(5000);
   await page.screenshot({ path: "./file/screenshot.png" }, { timeout: 10000 });
