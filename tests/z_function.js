@@ -4792,6 +4792,35 @@ async function check_class(page) {
   }
   return vps;
 }
+async function teams_chat() {
+  const browser = await firefox.launch({
+    headless: true,
+    args: ["--disable-blink-features=AutomationControlled"],
+  });
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  await page.goto("https://teams.live.com/free/");
+  await page.locator(`button[data-onclick="signIn"]`).click();
+  await page.locator(`#usernameEntry`).fill(`nesv025@outlook.com`);
+  await page.locator(`button[type="submit"]`).click();
+  await page.locator(`span[role="button"]`).nth(1).click();
+  await page.locator(`input[type="password"]`).fill(`Duywasd123`);
+  await page.locator(`button[type="submit"]`).click();
+  await page.waitForTimeout(3000);
+  await page.screenshot(
+    { path: "./output/screenshot.png" },
+    { timeout: 10000 }
+  );
+  await page.locator(`button[type="submit"]`).nth(1).click();
+  await page.locator(`span[title="Di Hoai"]`).click();
+  await page.locator(`div[data-tid="ckeditor"]`).fill(`Hi`);
+  await page.locator(`button[name="send"]`).click();
+  await page.waitForTimeout(5000);
+  await page.screenshot(
+    { path: "./output/screenshot.png" },
+    { timeout: 10000 }
+  );
+}
 async function recordVideo() {
   const browser = await chromium.launch();
   const context = await browser.newContext({
