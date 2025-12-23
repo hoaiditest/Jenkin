@@ -69,6 +69,28 @@ test("Engibase_DaiLyLogin ", async ({ page }) => {
     `[${new Date().toLocaleString()}] End Engibase_DaiLyLogin timeZone VN\n`
   );
 });
+test("Reset_mail_error", async ({ page }) => {
+  console.log(
+    `[${new Date().toLocaleString()}] Start Reset_mail_error timeZone VN\n`
+  );
+  test.setTimeout(3600000);
+  try {
+    /*login*/
+    await login_all(
+      page,
+      "https://manager.engibase.com/mail-account",
+      "hoangoisan@gmail.com",
+      "Duywasd123"
+    );
+    await page.locator("#breadcrumb_elements a").nth(0).click();
+    await page.waitForTimeout(5000);
+  } catch (error) {
+    await sentmail_error(page, `Reset_mail_error Daily : ${error}`, `${error}`);
+  }
+  console.log(
+    `[${new Date().toLocaleString()}] End Reset_mail_error timeZone VN\n`
+  );
+});
 test("Engibase ", async ({ page }) => {
   test.setTimeout(3600000);
   async function Check_Engibase(page) {
