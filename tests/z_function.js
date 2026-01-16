@@ -2595,7 +2595,7 @@ async function material_add(type) {
   await page.setViewportSize({ width: 1920, height: 1080 });
   await login_all(
     page,
-    "https://teacher.test.engibase.com/materials/add-title",
+    "https://www.test.learningpocket.com/teacher/r9DlHvQhilup31Pd9/materials/add-title",
     "hoaiditest@gmail.com",
     "Duywasd123"
   );
@@ -2606,11 +2606,11 @@ async function material_add(type) {
   await page.locator("#btn_next_page").click();
   await page.locator(".btn-materials").first().click();
   await page.locator("#newCateName").fill(RandomString(10));
-  await page.locator("#addCategory h5").click();
+  await page.locator(".modal-body>p").first().click();
   await page.locator("#btn_add_category").click();
   await page.locator(".btn-materials").nth(1).click();
   await page.locator("#page_title").fill(RandomString(10));
-  await page.locator("#select2-chapter_id-container").click();
+  await page.locator("#s2id_chapter_id").click();
   await page.waitForTimeout(1000);
   await page.keyboard.press("ArrowDown");
   await page.waitForTimeout(1000);
@@ -2636,10 +2636,10 @@ async function material_add(type) {
   await select(page, 1);
   await page
     .locator("#thumb-image")
-    .setInputFiles("./tests/DragonTiger/hinh1.jpg");
+    .setInputFiles("./tests/DragonTiger/hinh9.jpg");
   await page
     .locator("#bg-image")
-    .setInputFiles("./tests/DragonTiger/hinh2.jpg");
+    .setInputFiles("./tests/DragonTiger/hinh10.jpg");
   await page.locator("#btn_next_step").click();
   await page.waitForTimeout(2000);
   await page.locator("#mt_details").fill(RandomString(100));
