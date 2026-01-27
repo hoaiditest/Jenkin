@@ -435,7 +435,7 @@ async function add_skill_sheet(page) {
         .count();
       await select[i].selectOption(
         { index: Math.floor(Math.random() * (secondSelectOptions - 3)) + 3 },
-        { timeout: 1000 }
+        { timeout: 1000 },
       );
       await page1.waitForTimeout(500);
     } catch (error) {}
@@ -690,13 +690,13 @@ async function sent_mail_interaction(page) {
   await page.locator("#subject_content").fill(
     `sent_mail_interaction ${new Date().toLocaleString("vi-VN", {
       timeZone: "Asia/Ho_Chi_Minh",
-    })}`
+    })}`,
   );
   await page.locator("#body_detail_text_content").click();
   await page.locator("#body_detail_text_content").fill(
     `sent_mail_interaction ${new Date().toLocaleString("vi-VN", {
       timeZone: "Asia/Ho_Chi_Minh",
-    })}`
+    })}`,
   );
   await interaction_fillMail_file(page);
   await interaction_sent(page);
@@ -716,13 +716,13 @@ async function outbox_interaction(page) {
   await page.locator("#subject_content").fill(
     `outbox_interaction ${new Date().toLocaleString("vi-VN", {
       timeZone: "Asia/Ho_Chi_Minh",
-    })}`
+    })}`,
   );
   await page.locator("#body_detail_text_content").click();
   await page.locator("#body_detail_text_content").fill(
     `outbox_interaction ${new Date().toLocaleString("vi-VN", {
       timeZone: "Asia/Ho_Chi_Minh",
-    })}`
+    })}`,
   );
   await interaction_fillMail_file(page);
   await page.locator(".btn-save-outbox").nth(0).click();
@@ -745,7 +745,7 @@ async function reply_interaction(page) {
   await page1.locator("#body_detail_text_content").fill(
     `reply_interaction ${new Date().toLocaleString("vi-VN", {
       timeZone: "Asia/Ho_Chi_Minh",
-    })}`
+    })}`,
   );
   await interaction_fillMail_file(page1);
   await interaction_sent(page1);
@@ -1508,7 +1508,7 @@ function Random(array) {
 }
 function RandomString(
   len,
-  chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+  chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
 ) {
   return [...Array(len)]
     .map(() => chars.charAt(Math.floor(Math.random() * chars.length)))
@@ -1575,7 +1575,7 @@ async function select2(page) {
         .count();
       await select[i].selectOption(
         { index: Math.floor(Math.random() * (secondSelectOptions - 1)) + 1 },
-        { timeout: 3000 }
+        { timeout: 3000 },
       );
       await page.waitForTimeout(1000);
     } catch (error) {}
@@ -1739,7 +1739,7 @@ const number_fetch = 5;
 async function fetch_mail_per() {
   for (let a = 0; a < number_fetch; a++) {
     const name = `${String.fromCharCode(
-      65 + Math.floor(Math.random() * 26)
+      65 + Math.floor(Math.random() * 26),
     )}.${String.fromCharCode(65 + Math.floor(Math.random() * 26))}`;
     const sex_option = ["男性", "女性", "その他"];
     const sex = sex_option[Math.floor(Math.random() * sex_option.length)];
@@ -1877,7 +1877,7 @@ HP: https://techlink.jp/
       `Personnel ${name} ${RandomNumber(1)}`,
       `${content_per}`,
       `${name}.xlsx`,
-      `${mail_fetch}`
+      `${mail_fetch}`,
     );
   }
 }
@@ -1972,7 +1972,7 @@ HP：https://creative-tech.co.jp/
       `Project ${name_project} ${RandomNumber(1)}`,
       `${content_project}`,
       `${name_project}.xlsx`,
-      `${mail_fetch}`
+      `${mail_fetch}`,
     );
   }
 }
@@ -2012,7 +2012,7 @@ async function personnel_product_hoangoisan(personnel_content) {
       from: '"From DiTest" <foo@example.com>',
       to: "hoangoisan@gmail.com",
       subject: `personnel_product_hoangoisan : mail in for ${a} ${RandomString(
-        5
+        5,
       )}`,
       text: `${personnel_content}`,
     });
@@ -2041,7 +2041,7 @@ async function file_test_per_project(
   title_per,
   content_per,
   title_project,
-  content_project
+  content_project,
 ) {
   const page = await open_browser("didimimi1999dimi");
   // await page.waitForTimeout(10000);
@@ -2085,7 +2085,7 @@ async function file_product_per_project(
   title_per,
   content_per,
   title_project,
-  content_project
+  content_project,
 ) {
   const infor_per = await mail_infor(content_per);
   const inforPer = infor_per.name_per + RandomNumber(3);
@@ -2537,6 +2537,7 @@ async function ver2_add_project_self(page) {
   await select(page, 3);
   await page.locator("#slot_to").selectOption({ index: 10 });
   await page.locator("#range_upper").selectOption({ index: 10 });
+  await page.locator("#end_time").selectOption({ index: 5 });
   await page.locator("#btn_add_pr").click();
   await page.waitForTimeout(5000);
 }
@@ -2584,25 +2585,26 @@ async function content_mail() {
   // console.log(project_contentmail);
   return { personnel_contentmail, project_contentmail };
 }
-async function material_add(type) {
-  const browser = await chromium.launch({
+async function material_add(page, type, title) {
+  /*const browser = await chromium.launch({
     headless: false,
     executablePath:
       "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
   });
   const context = await browser.newContext();
   const page = await context.newPage();
-  await page.setViewportSize({ width: 1920, height: 1080 });
+  await page.setViewportSize({ width: 1920, height: 1080 });*/
   await login_all(
     page,
     "https://www.test.learningpocket.com/teacher/r9DlHvQhilup31Pd9/materials/add-title",
     "hoaiditest@gmail.com",
-    "Duywasd123"
+    "Duywasd123",
   );
-  await page.locator("#m_title").fill(RandomString(10));
+  await page.locator("#m_title").fill(title);
   if (type == "youtube") {
     await page.locator("#type").selectOption({ index: 1 });
   }
+  await page.waitForTimeout(1000);
   await page.locator("#btn_next_page").click();
   await page.locator(".btn-materials").first().click();
   await page.locator("#newCateName").fill(RandomString(10));
@@ -2619,7 +2621,7 @@ async function material_add(type) {
     await page
       .locator("#youtube_html_tag")
       .fill(
-        '<iframe width="560" height="315" src="https://www.youtube.com/embed/DOarY7sSum0?si=y2g08PnV4w0AME6b" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>'
+        '<iframe width="560" height="315" src="https://www.youtube.com/embed/DOarY7sSum0?si=y2g08PnV4w0AME6b" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>',
       );
     await page.waitForTimeout(2000);
     await page.locator("#btn_add_doc_page").click();
@@ -2647,13 +2649,18 @@ async function material_add(type) {
   await page.waitForTimeout(2000);
   await page.locator(".apply-btn").click();
   await page.waitForTimeout(5000);
+  await page.goto("https://www.test.learningpocket.com/manager/document");
+  await page.locator(`.approve-btn`).first().click();
+  await page.waitForTimeout(3000);
+  await page.locator(".confirm").click();
+  await page.waitForTimeout(5000);
 }
 async function check_test_add(page) {
   await login_all(
     page,
     "https://manager.test.engibase.com/examination/add",
     "nesv025@gmail.com",
-    "Duywasd123"
+    "Duywasd123",
   );
   await page.locator(".form-control").nth(0).selectOption({ index: 1 });
   await page.locator("#title").fill(RandomString(10));
@@ -2725,7 +2732,7 @@ async function chatgpt_create_content() {
   }
   await page.waitForTimeout(5000);
   await page.goto(
-    "https://chatgpt.com/share/677602ce-3bf0-8002-ae9a-fcbb785f0182"
+    "https://chatgpt.com/share/677602ce-3bf0-8002-ae9a-fcbb785f0182",
   );
   await page.waitForTimeout(5000);
   await page
@@ -2821,7 +2828,7 @@ async function chatgpt_create_content2() {
   }
   await page.waitForTimeout(20000);
   await page.goto(
-    "https://chatgpt.com/share/677602ce-3bf0-8002-ae9a-fcbb785f0182"
+    "https://chatgpt.com/share/677602ce-3bf0-8002-ae9a-fcbb785f0182",
   );
   await page.waitForTimeout(5000);
   async function create_sent(type, i) {
@@ -2921,7 +2928,7 @@ async function gemini() {
         `${title + RandomNumber(3)}`,
         `${content}`,
         `${infor}.xlsx`,
-        mail_have
+        mail_have,
       );
     } else {
       const infor_project = await mail_infor2(content);
@@ -2931,7 +2938,7 @@ async function gemini() {
         `${title + RandomNumber(3)}`,
         `${content}`,
         `${infor}.xlsx`,
-        mail_have
+        mail_have,
       );
     }
   }
@@ -2943,7 +2950,7 @@ async function fun_sent_data() {
     chatgpt_contentmail.per_title,
     chatgpt_contentmail.per_content,
     chatgpt_contentmail.project_title,
-    chatgpt_contentmail.project_content
+    chatgpt_contentmail.project_content,
   );
   //
   /*await personnel_product_025(
@@ -3043,7 +3050,7 @@ async function fun_sentMail_daily(page, expect) {
     web.sent6,
     web.sent7,
     web.sent8,
-    web.sent9
+    web.sent9,
   );
 }
 async function fun_sent_mail(page, expect) {
@@ -3061,13 +3068,13 @@ async function fun_sent_mail(page, expect) {
     page,
     "sent-mail/sent",
     "sent-mail/outbox",
-    "outbox_sent_mail"
+    "outbox_sent_mail",
   );
   const infor5 = await outbox(
     page,
     "sent-mail/sent-self",
     "sent-mail/outbox-self",
-    "outbox_sent_mail_self"
+    "outbox_sent_mail_self",
   );
   /*sent_mail_individual*/
   const infor6 = await sent_personnel_individual_self(page);
@@ -3112,7 +3119,7 @@ async function check_file(
   web6,
   web7,
   web8,
-  web9
+  web9,
 ) {
   const sent1 = [web0, web1, web2, web3, web4, web5];
   const sent2 = [web6, web7, web8, web9];
@@ -3172,7 +3179,7 @@ async function check_file(
       array1[0] +
       "\n all_have1 : " +
       array1 +
-      "\n \n"
+      "\n \n",
   );
   await file(array1, sent1, differences1);
   await file(array2, sent2, differences2);
@@ -3199,7 +3206,7 @@ async function check_file(
     await sentmail_error(
       null,
       `Sent Mail : Thiếu hoặc không có file ${RandomNumber(3)}`,
-      `${mails}`
+      `${mails}`,
     );
   }
 }
@@ -3216,6 +3223,41 @@ async function run_fun(page, expect) {
     await sentmail_error(page, `${error}`, `${error}`);
   }
 }
+async function createData_SentMail(page, expect) {
+  await fetch_mail_per();
+  await fetch_mail_project();
+  for (let i = 0; i < 10; i++) {
+    await ver2_add_personnel_self(page, expect);
+    await add_skill_sheet(page, expect);
+    await ver2_add_project_self(page, expect);
+  }
+  await direct_personnel_self(page, expect);
+  await direct_personnel(page, expect);
+  await direct_project(page, expect);
+  await direct_project_self(page, expect);
+  await sent_mail_self(page);
+  await sent_mail(page);
+  await sent_mail_project_self(page);
+  await sent_mail_project(page);
+  /*sent_mail_individual*/
+  await sent_personnel_individual_self(page);
+  await sent_personnel_individual(page);
+  await sent_project_individual_self(page);
+  await sent_project_individual(page);
+  /*outbox*/
+  await outbox(page, "sent-mail/sent", "sent-mail/outbox", "outbox_sent_mail");
+  await outbox(
+    page,
+    "sent-mail/sent-self",
+    "sent-mail/outbox-self",
+    "outbox_sent_mail_self",
+  );
+  /*interaction*/
+  await sent_mail_interaction(page);
+  await sent_mail_interaction_template(page);
+  await outbox_interaction(page);
+}
+
 async function safeRun(fn) {
   try {
     await fn;
@@ -3230,7 +3272,7 @@ async function EngiConnect(page, expect) {
   await page.locator(`#id_password`).fill("Duywasd123");
   await page.locator(`.btn`).nth(0).click();
   await page.goto(
-    "https://sentry.g-root.com/organizations/groot/issues/?project=2&statsPeriod=24h"
+    "https://sentry.g-root.com/organizations/groot/issues/?project=2&statsPeriod=24h",
   );
   await page.waitForTimeout(1000);
   // Tính toán thời gian 15 phút trước
@@ -3262,7 +3304,7 @@ async function EngiConnect(page, expect) {
     if (errorTime >= fifteenMinutesAgo) {
       if (errorTitle.includes("DB_CONNECTION_ERROR")) {
         console.log(
-          `🔴 Lỗi DB_CONNECTION_ERROR được tìm thấy trong 24h gần nhất:`
+          `🔴 Lỗi DB_CONNECTION_ERROR được tìm thấy trong 24h gần nhất:`,
         );
         console.log(`   - Tiêu đề: ${errorTitle}`);
         console.log(`   - Thời gian: ${errorTime.toISOString()}`);
@@ -3279,7 +3321,7 @@ async function EngiConnect(page, expect) {
             "h-inui@learningift.com",
             "hayashi-y@learningift.com",
             "nesv006@gmail.com",
-          ]
+          ],
         );
         await page.goBack();
         foundError = true;
@@ -3287,7 +3329,7 @@ async function EngiConnect(page, expect) {
 
       if (errorTitle.includes("SERVICE_UNAVAILABLE")) {
         console.log(
-          `🔴 Lỗi SERVICE_UNAVAILABLE được tìm thấy trong 24h gần nhất:`
+          `🔴 Lỗi SERVICE_UNAVAILABLE được tìm thấy trong 24h gần nhất:`,
         );
         console.log(`   - Tiêu đề: ${errorTitle}`);
         console.log(`   - Thời gian: ${errorTime.toISOString()}`);
@@ -3304,7 +3346,7 @@ async function EngiConnect(page, expect) {
             "h-inui@learningift.com",
             "hayashi-y@learningift.com",
             "nesv006@gmail.com",
-          ]
+          ],
         );
         await page.goBack();
         foundError = true;
@@ -3328,42 +3370,6 @@ async function doda() {
   // await page.locator(`#actionLogin_0`).click();
 
   await page.waitForTimeout(100000);
-}
-async function createData_SentMail(page, expect) {
-  for (let i = 0; i < 10; i++) {
-    await ver2_add_personnel_self(page, expect);
-    await add_skill_sheet(page, expect);
-    await ver2_add_project_self(page, expect);
-  }
-  await direct_personnel_self(page, expect);
-  await direct_personnel(page, expect);
-  await direct_project(page, expect);
-  await direct_project_self(page, expect);
-  await sent_mail_self(page);
-  await sent_mail(page);
-  await sent_mail_project_self(page);
-  await sent_mail_project(page);
-  await sent_personnel_individual_self(page);
-  await sent_personnel_individual(page);
-  await sent_project_individual_self(page);
-  await sent_project_individual(page);
-  /*outbox*/
-  await outbox(page, "sent-mail/sent", "sent-mail/outbox", "outbox_sent_mail");
-  await outbox(
-    page,
-    "sent-mail/sent-self",
-    "sent-mail/outbox-self",
-    "outbox_sent_mail_self"
-  );
-  /*sent_mail_individual*/
-  await sent_personnel_individual_self(page);
-  await sent_personnel_individual(page);
-  await sent_project_individual_self(page);
-  await sent_project_individual(page);
-  /*interaction*/
-  await sent_mail_interaction(page);
-  await sent_mail_interaction_template(page);
-  await outbox_interaction(page);
 }
 async function Check_Warning(page, expect) {
   await page.goto("https://manager.test.engibase.com/mail-account");
@@ -3401,7 +3407,7 @@ async function Check_lastFetch(page, expect) {
 
   // Tách dòng chứa "Last fetch:" (nếu cần tách riêng)
   const lastFetchLine = Text.split("\n").find((line) =>
-    line.includes("Last fetch:")
+    line.includes("Last fetch:"),
   );
   // Tách thời gian dạng chuỗi
   const lastFetchTimeStr = lastFetchLine.replace("Last fetch: ", "").trim();
@@ -3409,7 +3415,7 @@ async function Check_lastFetch(page, expect) {
   const lastFetchTime = dayjs(lastFetchTimeStr);
 
   const nextFetchLine = Text.split("\n").find((line) =>
-    line.includes("Next fetch:")
+    line.includes("Next fetch:"),
   );
   const nextFetchTimeStr = nextFetchLine.replace("Next fetch: ", "").trim();
 
@@ -3436,11 +3442,11 @@ async function Check_lastFetch(page, expect) {
     const nextFetchNum = parseInt(nextFetch, 10);
     if (lastFetchNum + 1 === nextFetchNum) {
       console.log(
-        "🟢 Last fetch KHÔNG nằm trong khoảng 5 phút nhưng nextFetch lớn hơn 1 ngày"
+        "🟢 Last fetch KHÔNG nằm trong khoảng 5 phút nhưng nextFetch lớn hơn 1 ngày",
       );
     } else {
       console.log(
-        "⚠️ Last fetch KHÔNG nằm trong khoảng 5 phút và nextFetch nhỏ hơn 1 ngày"
+        "⚠️ Last fetch KHÔNG nằm trong khoảng 5 phút và nextFetch nhỏ hơn 1 ngày",
       );
       console.log("Last fetch: ", lastFetchTime.format("YYYY-MM-DD HH:mm:ss"));
       console.log("Next fetch: ", nextFetchTime.format("YYYY-MM-DD HH:mm:ss"));
@@ -3454,7 +3460,7 @@ async function Check_lastFetch(page, expect) {
         `⚠️ ${new Date().toLocaleString("vi-VN", {
           timeZone: "Asia/Ho_Chi_Minh",
         })} Next fetch: ${nextFetchTime.format(
-          "YYYY-MM-DD"
+          "YYYY-MM-DD",
         )} và Last fetch Chênh lệch: ${diffMinutes} phút ⚠️`,
         `${new Date().toLocaleString("vi-VN", {
           timeZone: "Asia/Ho_Chi_Minh",
@@ -3464,7 +3470,7 @@ Next fetch: ${nextFetchTime.format("YYYY-MM-DD HH:mm:ss")}
 Japan now: ${nowJapan.format("YYYY-MM-DD HH:mm:ss")} 
 Đã nhấn nút キャッシュ削除 
 https://manager.test.engibase.com/mail-account `,
-        ["nesv006@gmail.com"]
+        ["nesv006@gmail.com"],
       );
     }
 
@@ -3704,7 +3710,7 @@ async function CheckTimeLoadPage(page, url) {
 URL : ${url}  
 Thời gian : ${new Date().toLocaleString("vi-VN", {
         timeZone: "Asia/Ho_Chi_Minh",
-      })}`
+      })}`,
     );
   }
 }
@@ -3728,7 +3734,7 @@ async function check_sent_mail_detail(page, expect, mail_sent, sentNumber) {
 
     // Điều chỉnh về múi giờ Việt Nam (trừ 2 giờ)
     const extractedDateVN = new Date(
-      extractedDateJP.getTime() - 2 * 60 * 60 * 1000
+      extractedDateJP.getTime() - 2 * 60 * 60 * 1000,
     );
 
     // Lấy thời gian hiện tại
@@ -3741,7 +3747,7 @@ async function check_sent_mail_detail(page, expect, mail_sent, sentNumber) {
     // Tính toán sự khác biệt thời gian (độ trễ) bằng mili giây
     // Sử dụng Math.abs để đảm bảo giá trị luôn dương
     const timeDifferenceInMs = Math.abs(
-      currentDate.getTime() - extractedDateVN.getTime()
+      currentDate.getTime() - extractedDateVN.getTime(),
     );
     const maxAllowedDifferenceInMs = 135 * 60 * 1000; // 5 phút
 
@@ -3754,7 +3760,7 @@ async function check_sent_mail_detail(page, expect, mail_sent, sentNumber) {
       break;
     } catch (e) {
       console.log(
-        `${e}\nMail chưa gửi(không hiển thị ngày và giờ hiện tại)và thử lại ...`
+        `${e}\nMail chưa gửi(không hiển thị ngày và giờ hiện tại)và thử lại ...`,
       );
       await page.waitForTimeout(30000);
       await page.reload();
@@ -3781,7 +3787,7 @@ async function check_sent_mail_detail(page, expect, mail_sent, sentNumber) {
 
     // In ra kết quả để dễ debug
     console.log(
-      `Số lượng gửi: ${sentCount}\nSố lượng thành công: ${successCount}`
+      `Số lượng gửi: ${sentCount}\nSố lượng thành công: ${successCount}`,
     );
   }
   while (Date.now() - startTime2 < timeout) {
@@ -3856,7 +3862,7 @@ async function sentmail_errorJP(page, url, content, mail_error) {
     page,
     `【緊急】${url} に問題が発生しています ${new Date().toLocaleString(
       "ja-JP",
-      { timeZone: "Asia/Tokyo" }
+      { timeZone: "Asia/Tokyo" },
     )}`,
     ` 
 ${url} で問題が発生しています。
@@ -3869,7 +3875,7 @@ ${content}
       timeZone: "Asia/Ho_Chi_Minh",
     })} (VN)
 `,
-    mail_error
+    mail_error,
   );
 }
 async function sentmail_error(page = null, title, content, mail_error) {
@@ -4512,7 +4518,7 @@ async function fix_482(page) {
   const call1 = await get_number(page);
   await goto(
     page,
-    "sale/report-proper?sales_ids%5B%5D=220&methods%5B%5D=ALL&skill_points%5B%5D=ALL&routes%5B%5D=DIRECTLY&types%5B%5D=SENT&types%5B%5D=CALL&types%5B%5D=CALLED&types%5B%5D=PROJECT&types%5B%5D=PROJECT_AVG&types%5B%5D=PROJECT_RATE&types%5B%5D=INTERVIEW&types%5B%5D=INTERVIEW_RATE&types%5B%5D=INTERVIEW_AVG&types%5B%5D=OFFER&types%5B%5D=OFFER_RATE&types%5B%5D=OFFER_AVG&types%5B%5D=DECISION&types%5B%5D=DECISION_RATE&types%5B%5D=DECISION_AVG&types%5B%5D=EJECTION"
+    "sale/report-proper?sales_ids%5B%5D=220&methods%5B%5D=ALL&skill_points%5B%5D=ALL&routes%5B%5D=DIRECTLY&types%5B%5D=SENT&types%5B%5D=CALL&types%5B%5D=CALLED&types%5B%5D=PROJECT&types%5B%5D=PROJECT_AVG&types%5B%5D=PROJECT_RATE&types%5B%5D=INTERVIEW&types%5B%5D=INTERVIEW_RATE&types%5B%5D=INTERVIEW_AVG&types%5B%5D=OFFER&types%5B%5D=OFFER_RATE&types%5B%5D=OFFER_AVG&types%5B%5D=DECISION&types%5B%5D=DECISION_RATE&types%5B%5D=DECISION_AVG&types%5B%5D=EJECTION",
   );
   const report_proper1 = await get_number(page);
   await goto(page, "call/add-self/5212");
@@ -4535,7 +4541,7 @@ async function fix_482(page) {
   const call2 = await get_number(page);
   await goto(
     page,
-    "sale/report-proper?sales_ids%5B%5D=220&methods%5B%5D=ALL&skill_points%5B%5D=ALL&routes%5B%5D=DIRECTLY&types%5B%5D=SENT&types%5B%5D=CALL&types%5B%5D=CALLED&types%5B%5D=PROJECT&types%5B%5D=PROJECT_AVG&types%5B%5D=PROJECT_RATE&types%5B%5D=INTERVIEW&types%5B%5D=INTERVIEW_RATE&types%5B%5D=INTERVIEW_AVG&types%5B%5D=OFFER&types%5B%5D=OFFER_RATE&types%5B%5D=OFFER_AVG&types%5B%5D=DECISION&types%5B%5D=DECISION_RATE&types%5B%5D=DECISION_AVG&types%5B%5D=EJECTION"
+    "sale/report-proper?sales_ids%5B%5D=220&methods%5B%5D=ALL&skill_points%5B%5D=ALL&routes%5B%5D=DIRECTLY&types%5B%5D=SENT&types%5B%5D=CALL&types%5B%5D=CALLED&types%5B%5D=PROJECT&types%5B%5D=PROJECT_AVG&types%5B%5D=PROJECT_RATE&types%5B%5D=INTERVIEW&types%5B%5D=INTERVIEW_RATE&types%5B%5D=INTERVIEW_AVG&types%5B%5D=OFFER&types%5B%5D=OFFER_RATE&types%5B%5D=OFFER_AVG&types%5B%5D=DECISION&types%5B%5D=DECISION_RATE&types%5B%5D=DECISION_AVG&types%5B%5D=EJECTION",
   );
   const report_proper2 = await get_number(page);
   if (
@@ -4552,17 +4558,17 @@ async function fix_482(page) {
 async function report_proper(page) {
   await goto(
     page,
-    "sale/report-proper?sales_ids%5B%5D=220&methods%5B%5D=ENGINEER&skill_points%5B%5D=40_&types%5B%5D=SENT"
+    "sale/report-proper?sales_ids%5B%5D=220&methods%5B%5D=ENGINEER&skill_points%5B%5D=40_&types%5B%5D=SENT",
   );
   await item();
   await goto(
     page,
-    "sale/report-proper?sales_ids%5B%5D=220&methods%5B%5D=ENGINEER&skill_points%5B%5D=40_&types%5B%5D=CALL"
+    "sale/report-proper?sales_ids%5B%5D=220&methods%5B%5D=ENGINEER&skill_points%5B%5D=40_&types%5B%5D=CALL",
   );
   await item();
   await goto(
     page,
-    "sale/report-proper?sales_ids%5B%5D=220&methods%5B%5D=ENGINEER&skill_points%5B%5D=40_&types%5B%5D=CALLED"
+    "sale/report-proper?sales_ids%5B%5D=220&methods%5B%5D=ENGINEER&skill_points%5B%5D=40_&types%5B%5D=CALLED",
   );
   await item();
   async function item() {
