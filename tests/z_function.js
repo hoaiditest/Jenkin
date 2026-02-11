@@ -376,11 +376,11 @@ async function ver2_add_personnel_self(page) {
     .locator("select[name='nation']")
     .selectOption({ index: Math.floor(Math.random() * nation) });
   await page.waitForTimeout(1000);
-  const intv_start = await page.locator("#intv_start>option").count();
+  /*const intv_start = await page.locator("#intv_start>option").count();
   await page
     .locator("#intv_start")
     .selectOption({ index: Math.floor(Math.random() * intv_start) });
-  await page.waitForTimeout(1000);
+  await page.waitForTimeout(1000);*/
   for (let i = 0; i < 10; i++) {
     await page.locator("#position-phase-search").click();
     await page.waitForTimeout(1000);
