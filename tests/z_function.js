@@ -3801,7 +3801,7 @@ async function check_sent_mail_detail(page, expect, mail_sent, sentNumber) {
     }
   }
   await checkNumber(page, expect, sentNumber);
-  await page.locator(".btn-success>i").nth(0).click();
+  await page.locator(".ph-info").nth(0).click();
   const page1Promise = page.waitForEvent("popup");
   const page1 = await page1Promise;
   const url1 = await page1.url();
