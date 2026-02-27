@@ -4924,4 +4924,11 @@ module.exports = {
   EngiConnect,
   check_sent_mail_detail,
   teams_chat,
+  fetch_mail_per,
+  fetch_mail_project,
+  ver2_add_personnel_self,
+  add_skill_sheet,
+  ver2_add_project_self,
+  outbox,
+  outbox_interaction,
 };
