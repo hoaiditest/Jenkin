@@ -4,12 +4,16 @@ import { sentmail_error } from "./z_function";
 test("Jpsic ", async ({ page }) => {
   test.setTimeout(300000);
   console.log(
-    `[${new Date().toLocaleString()}] Start Check_Jpsic timeZone VN\n`
+    `[${new Date().toLocaleString()}] Start Check_Jpsic timeZone VN\n`,
   );
   const link = [
     "https://test.jpsic.co.jp/",
     "https://jpsic.co.jp/",
     "https://jpsic.g-root.com/",
+    "https://learningift.com/",
+    "https://gamershi.com/",
+    "https://askbe.net/",
+    "https://www.rectelework.com/",
     // "https://test.jsic-userpage.jpsic.co.jp/",
     // "https://test.jsic-master2page.jpsic.co.jp/",
     // "https://jsic-master2page.jpsic.co.jp/",
@@ -21,6 +25,7 @@ test("Jpsic ", async ({ page }) => {
   ];
   for (let i = 0; i < link.length; i++) {
     await page.goto(link[i]);
+    await console.log(page.url());
     await page.waitForTimeout(5000);
     const response = await page.request.get(page.url());
     if (response.status() != 200) {
@@ -28,7 +33,7 @@ test("Jpsic ", async ({ page }) => {
         page,
         `${link[i]} に問題が発生しています ${new Date().toLocaleString(
           "ja-JP",
-          { timeZone: "Asia/Tokyo" }
+          { timeZone: "Asia/Tokyo" },
         )}`,
         ` 
 ${link[i]} で問題が発生しています。
@@ -40,7 +45,7 @@ Status Code: ${response.status()}
         })}(Asia/Tokyo)
 発生日時：${new Date().toLocaleString()} (VN)
 `,
-        ["h-inui@learningift.com", "nesv006@gmail.com"]
+        ["h-inui@learningift.com", "nesv006@gmail.com"],
       );
     }
   }
