@@ -3411,36 +3411,31 @@ async function Check_lastFetch(page, expect) {
   );
   // Tách thời gian dạng chuỗi
   const lastFetchTimeStr = lastFetchLine.replace("Last fetch: ", "").trim();
-
-  const lastFetchTime = dayjs(lastFetchTimeStr);
-
   const nextFetchLine = Text.split("\n").find((line) =>
     line.includes("Next fetch:"),
   );
   const nextFetchTimeStr = nextFetchLine.replace("Next fetch: ", "").trim();
-
-  const nextFetchTime = dayjs(nextFetchTimeStr);
-
   // Lấy thời gian hiện tại theo múi giờ Nhật Bản (Asia/Tokyo)
   const nowJapanStr = new Date().toLocaleString("ja-JP", {
     timeZone: "Asia/Tokyo",
   });
+
+  const lastFetchTime = dayjs(lastFetchTimeStr);
   const nowJapan = dayjs(nowJapanStr);
+  const nextFetchTime = dayjs(nextFetchTimeStr);
 
   const diffMinutes = nowJapan.diff(lastFetchTime, "minute");
+  const diffDays = nextFetchTime
+    .startOf("day")
+    .diff(lastFetchTime.startOf("day"), "day");
 
   if (diffMinutes >= 0 && diffMinutes < 5) {
-    // if (diffMinutes < 0) {
     console.log("🟢 Last fetch CÁCH thời gian hiện tại (Nhật Bản) dưới 5 phút");
     console.log("Last fetch: ", lastFetchTime.format("YYYY-MM-DD HH:mm:ss"));
     console.log("Japan now: ", nowJapan.format("YYYY-MM-DD HH:mm:ss"));
     console.log("Chênh lệch: ", diffMinutes, "phút");
   } else {
-    const lastFetch = lastFetchTime.format("DD");
-    const nextFetch = nextFetchTime.format("DD");
-    const lastFetchNum = parseInt(lastFetch, 10);
-    const nextFetchNum = parseInt(nextFetch, 10);
-    if (lastFetchNum + 1 === nextFetchNum) {
+    if (diffDays === 1) {
       console.log(
         "🟢 Last fetch KHÔNG nằm trong khoảng 5 phút nhưng nextFetch lớn hơn 1 ngày",
       );
@@ -3452,9 +3447,9 @@ async function Check_lastFetch(page, expect) {
       console.log("Next fetch: ", nextFetchTime.format("YYYY-MM-DD HH:mm:ss"));
       console.log("Japan now: ", nowJapan.format("YYYY-MM-DD HH:mm:ss"));
       console.log("Chênh lệch: ", diffMinutes, "phút");
-      console.log("Đã nhấn nút キャッシュ削除");
       await page.locator("#breadcrumb_elements a").nth(0).click();
       await page.waitForTimeout(5000);
+      console.log("Đã nhấn nút キャッシュ削除");
       await sentmail_error(
         page,
         `⚠️ ${new Date().toLocaleString("vi-VN", {
@@ -3473,9 +3468,6 @@ https://manager.test.engibase.com/mail-account `,
         ["nesv006@gmail.com"],
       );
     }
-
-    /*
-     */
   }
 }
 async function FileUpload(page) {

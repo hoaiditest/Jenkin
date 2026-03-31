@@ -115,7 +115,7 @@ test("Engibase ", async ({ page }) => {
   );
 });
 
-/*test("Check_lastFetch ", async ({ page }) => {
+test("Check_lastFetch ", async ({ page }) => {
   console.log(
     `[${new Date().toLocaleString()}] Start Check_lastFetch timeZone VN\n`
   );
@@ -134,4 +134,4 @@ test("Engibase ", async ({ page }) => {
   console.log(
     `[${new Date().toLocaleString()}] End Check_lastFetch timeZone VN\n`
   );
-});*/
+});
