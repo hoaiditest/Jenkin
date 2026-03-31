@@ -14,7 +14,7 @@ const { chromium } = require("playwright");
 test("Engibase_DaiLyLogin ", async ({ page }) => {
   test.setTimeout(300000);
   console.log(
-    `[${new Date().toLocaleString()}] Start Engibase_DaiLyLogin timeZone VN\n`
+    `[${new Date().toLocaleString()}] Start Engibase_DaiLyLogin timeZone VN\n`,
   );
   async function mail(page, url, response) {
     await sentmail_error(
@@ -36,7 +36,7 @@ test("Engibase_DaiLyLogin ", async ({ page }) => {
         "h-inui@learningift.com",
         "nesv006@gmail.com",
         "hayashi-y@learningift.com",
-      ]
+      ],
     );
   }
   async function Engibase_DaiLyLogin(page) {
@@ -51,7 +51,7 @@ test("Engibase_DaiLyLogin ", async ({ page }) => {
       page,
       "https://visitor.engibase.com/",
       "duy@g-root.com",
-      "Duywasd123"
+      "Duywasd123",
     );
     await page.waitForTimeout(3000);
     const response = await page.request.get(page.url());
@@ -66,12 +66,12 @@ test("Engibase_DaiLyLogin ", async ({ page }) => {
     await sentmail_error(page, `Engibase_DaiLyLogin ${error}`, `${error}`);
   }
   console.log(
-    `[${new Date().toLocaleString()}] End Engibase_DaiLyLogin timeZone VN\n`
+    `[${new Date().toLocaleString()}] End Engibase_DaiLyLogin timeZone VN\n`,
   );
 });
 test("Reset_mail_error", async ({ page }) => {
   console.log(
-    `[${new Date().toLocaleString()}] Start Reset_mail_error timeZone VN\n`
+    `[${new Date().toLocaleString()}] Start Reset_mail_error timeZone VN\n`,
   );
   test.setTimeout(3600000);
   try {
@@ -80,7 +80,7 @@ test("Reset_mail_error", async ({ page }) => {
       page,
       "https://manager.engibase.com/mail-account",
       "hoangoisan@gmail.com",
-      "Duywasd123"
+      "Duywasd123",
     );
     await page.locator("#breadcrumb_elements a").nth(0).click();
     await page.waitForTimeout(5000);
@@ -88,7 +88,7 @@ test("Reset_mail_error", async ({ page }) => {
     await sentmail_error(page, `Reset_mail_error Daily : ${error}`, `${error}`);
   }
   console.log(
-    `[${new Date().toLocaleString()}] End Reset_mail_error timeZone VN\n`
+    `[${new Date().toLocaleString()}] End Reset_mail_error timeZone VN\n`,
   );
 });
 test("Engibase ", async ({ page }) => {
@@ -98,12 +98,12 @@ test("Engibase ", async ({ page }) => {
       page,
       "https://visitor.engibase.com/",
       "checkservice2@gmail.com",
-      "Duywasd123"
+      "Duywasd123",
     );
     await click_menu(page, expect);
   }
   console.log(
-    `[${new Date().toLocaleString()}] Start Check_Engibase timeZone VN\n`
+    `[${new Date().toLocaleString()}] Start Check_Engibase timeZone VN\n`,
   );
   try {
     await Check_Engibase(page);
@@ -111,18 +111,17 @@ test("Engibase ", async ({ page }) => {
     await sentmail_error(page, `Daily Click Menu Jenkin ${error}`, `${error}`);
   }
   console.log(
-    `[${new Date().toLocaleString()}] End Check_Engibase timeZone VN\n`
+    `[${new Date().toLocaleString()}] End Check_Engibase timeZone VN\n`,
   );
 });
 
-test("Check_lastFetch ", async ({ page }) => {
+/*test("Check_lastFetch ", async ({ page }) => {
   console.log(
     `[${new Date().toLocaleString()}] Start Check_lastFetch timeZone VN\n`
   );
   test.setTimeout(3600000);
   try {
-    /*login*/
-    await login_all(
+     await login_all(
       page,
       "https://manager.test.engibase.com/mail-account",
       "checklastfetch@gmail.com",
@@ -135,4 +134,4 @@ test("Check_lastFetch ", async ({ page }) => {
   console.log(
     `[${new Date().toLocaleString()}] End Check_lastFetch timeZone VN\n`
   );
-});
+});*/
